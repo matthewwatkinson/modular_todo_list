@@ -1,7 +1,11 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-print("hello to do list")
+### need to make data persistent between sessions
+
+### need to make a list addable to a list
+
+### need to make the starting interface
 
 class ListItem:
     # each list item belongs to an owner_list, has a name and a done/not_done state
@@ -37,7 +41,10 @@ class ListModule:
         self.item_list = []
 
     def add_item(self, new_item_name: str):
-        # add a new item, put in list if does not already exists
+        # add a new item, put in list if does not already exists and is valid input
+        if not new_item_name:
+            print("Please provide a valid task name in order to add to list")
+            return
         if new_item_name in self.item_list:
             print(f"The to-do item '{new_item_name}' already exists.")
         else:
@@ -45,7 +52,11 @@ class ListModule:
             print(f"{new_item_name} added successfully.")
 
     def remove_item(self, existing_item: str):
-        # remove an item, if it exists
+        # remove an item, if it exists and is valid input
+        if not existing_item:
+            print("Please provide a valid task name in order to remove from list")
+            return
+ 
         if existing_item in self.item_list:
             self.item_list.remove(existing_item)
             print(f"{existing_item} removed successfully.")
@@ -63,7 +74,10 @@ class ListModule:
     def __str__(self):
         print_string = ""
         for item in self.item_list:
-            print_string += f"task: {item.item_name} belongs to {item.owner_list} and is {item.state}\n"
+            done = "x"
+            if item.state == "done":
+                done = "o"
+            print_string += f" {done} | {item.item_name} belongs to {item.owner_list} and is {item.state}\n"
         return print_string
 
 
@@ -71,15 +85,13 @@ test_list = ListModule("test_list")
 test_list.add_item("cooking")
 test_list.add_item("cleaning")
 test_list.add_item("cleaning")
+input_test = input("Input the task that you would like to add to the list: ")
+test_list.add_item(input_test)
 
 print(test_list)
 test_list.remove_item("polishing")
 test_list.remove_item("cleaning")
-print(test_list)
-test_list.item_toggle("cooking")
-print(test_list)
-test_list.item_toggle("painting")
-print(test_list)
 
+print(test_list)
 
 
