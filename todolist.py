@@ -7,7 +7,6 @@ import jsonpickle
 
 ### see if we can load the module dictionary
 
-### check logic when adding list to modules with same name - overwrite or cancel?
 
 ### need to make a list addable to a list
 
@@ -18,6 +17,8 @@ import jsonpickle
 ### is a manual save option required for module edit? can we just save when program ends? write simple end() function to make sure the save doesn't get skipped
 
 ### add list rename to list odifier menu
+
+### should modules have descriptions?
 
 class ListItem:
     # each list item belongs to an owner_list, has a name and a done/not_done state
@@ -114,6 +115,11 @@ class ListModule:
         spaces = " " * (20 - name_length)
         #print 20 total name and spaces
         print(f"{self.list_name}{spaces}contains {list_length} items")
+
+    def display_as_module(self):
+        print(f"\nThe module {self.list_name} contains the following items:\n")
+        for i in self.item_list:
+            print(i.item_name)
     
     def save_as_module(self):
         # add the currently displayed list to the module dictionary after setting all items to "undone"
@@ -205,7 +211,7 @@ What would you like to do with your list?
         target_list.save_as_module()
 
 def module_display_menu():
-    # first display all the modules / replace this temporary print with print_summary() func for class containing name, number of items
+    # first display all the modules
     print("These are the currently saved modules\n")
     for l in module_dictionary:
         l_test = module_dictionary[l]
@@ -231,7 +237,7 @@ What would you like to do?
         module_modifier_menu(module_dictionary[selected_module])
 
 def module_modifier_menu(target_module):
-    print(target_module)
+    target_module.display_as_module()
     print("""
 What would you like to do with your module?
 
