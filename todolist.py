@@ -1,15 +1,23 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-### need to make data persistent between sessions
+import json
+import jsonpickle
+
+
+### see if we can load the module dictionary
+
+### check logic when adding list to modules with same name - overwrite or cancel?
 
 ### need to make a list addable to a list
 
-### need to make the starting interface
-
-### add options to mark whole list done/undone
-
 ### change list display into numbered list and make that number the toggle selector/remove selector
+
+### need a different display string without status for module screen
+
+### is a manual save option required for module edit? can we just save when program ends? write simple end() function to make sure the save doesn't get skipped
+
+### add list rename to list odifier menu
 
 class ListItem:
     # each list item belongs to an owner_list, has a name and a done/not_done state
@@ -77,6 +85,18 @@ class ListModule:
             target_index = self.item_list.index(target)
             self.item_list[target_index].status_change()
 
+    def all_done(self, message):
+        for item in self.item_list:
+            item.state = "done"
+        if message == 1:
+            print(f"All items in {self.list_name} set to 'done'")
+    
+    def all_undone(self, message):
+        for item in self.item_list:
+            item.state = "not_done"
+        if message == 1:
+            print(f"All items in {self.list_name} set to 'not_done'")
+
     def __str__(self):
         print_string = "\n"
         if not self.item_list:
@@ -88,12 +108,40 @@ class ListModule:
             print_string += f" {done} | {item.item_name} belongs to {item.owner_list} and is {item.state}\n"
         return print_string
     
+    def display_as_line(self):
+        list_length = len(self.item_list)
+        name_length = len(self.list_name)
+        spaces = " " * (20 - name_length)
+        #print 20 total name and spaces
+        print(f"{self.list_name}{spaces}contains {list_length} items")
+    
+    def save_as_module(self):
+        # add the currently displayed list to the module dictionary after setting all items to "undone"
+        # unless already exists or empty
+        if self.list_name in module_dictionary:
+            overwrite_choice = input("\nA module with this name already exists. Would you like to overwrite the existing module y/n? ")
+            if overwrite_choice == "n":
+                print("You can rename thre list and save as a new module\n")
+                list_modifier_menu(self)
+            else:
+                if not self:
+                    print("Can not save empty list as module")
+                    list_modifier_menu(self)
+                self.all_undone(0)
+                module_dictionary[self.list_name] = self
+                #save to json
+                json_compatible_module_dict = jsonpickle.encode(module_dictionary)
+                with open("module_list_storage.json", "w") as f:
+                    json.dump(json_compatible_module_dict, f, indent=2, )
+                print(f"Added to modules as {self.list_name}")
+                list_modifier_menu(self)
+    
 def start_menu(message="Welcome to the modular list maker. Please select from the menu below"):
     print(f"""{message}
           
 1) Create a new list
 2) View an existing list
-3) Delete an existing list
+3) View list modules
 4) Exit program
 """)
     valid_menu_selections = ["1", "2", "3", "4"]
@@ -110,6 +158,9 @@ def start_menu(message="Welcome to the modular list maker. Please select from th
         new_list = ListModule(list_name)
         print(f"New list {list_name} created")
         list_modifier_menu(new_list)
+    elif menu_selection == "3":
+        # launch module display
+        module_display_menu()
     
 def list_modifier_menu(target_list):
     print(target_list)
@@ -119,14 +170,15 @@ What would you like to do with your list?
 1) Add item
 2) Remove item
 3) Toggle item
-4) Return to main menu
+4) Save as module
+5) Return to main menu
 """)
-    modifier_valid_menu_selections = ["1", "2", "3", "4"]
+    modifier_valid_menu_selections = ["1", "2", "3", "4", "5"]
     modifier_menu_selection = input("Please input the number of your choice: ")
     if modifier_menu_selection not in modifier_valid_menu_selections:
         print("This is not a valid choice")
         list_modifier_menu(target_list)
-    elif modifier_menu_selection == "4":
+    elif modifier_menu_selection == "5":
         # exit to main menu
         start_menu()
     elif modifier_menu_selection == "1":
@@ -149,7 +201,76 @@ What would you like to do with your list?
         toggle_target = input("\nWhich list item would you like to toggle? ")
         target_list.item_toggle(toggle_target)
         list_modifier_menu(target_list)
+    elif modifier_menu_selection == "4":
+        target_list.save_as_module()
 
+def module_display_menu():
+    # first display all the modules / replace this temporary print with print_summary() func for class containing name, number of items
+    print("These are the currently saved modules\n")
+    for l in module_dictionary:
+        l_test = module_dictionary[l]
+        l_test.display_as_line()
+
+    print("""
+What would you like to do?
+
+1) Create new module
+2) Delete existing module
+3) Edit existing module
+4) Return to main menu
+""")
+    module_display_valid_menu_selections = ["1", "2", "3", "4"]
+    module_menu_selection = input("Please input the number of your choice: ")
+    if module_menu_selection not in module_display_valid_menu_selections:
+        print("\nThis is not a valid choice\n")
+        module_display_menu()
+    elif module_menu_selection == "4":
+        start_menu()
+    elif module_menu_selection == "3":
+        selected_module = input("\nWhich module would you like to edit? ")
+        module_modifier_menu(module_dictionary[selected_module])
+
+def module_modifier_menu(target_module):
+    print(target_module)
+    print("""
+What would you like to do with your module?
+
+1) Add item
+2) Remove item
+3) Save changes
+4) Return to modules
+""")
+    module_modifier_valid_menu_selections = ["1", "2", "3", "4"]
+    module_modifier_menu_selection = input("Please input the number of your choice: ")
+    if module_modifier_menu_selection not in module_modifier_valid_menu_selections:
+        print("This is not a valid choice")
+        module_modifier_menu(target_module)
+    elif module_modifier_menu_selection == "4":
+        # exit to module menu
+        module_display_menu()
+    elif module_modifier_menu_selection == "1":
+        #add an item
+        new_item_name = input("\nInput item to be added: ")
+        target_module.add_item(new_item_name)
+        module_modifier_menu(target_module)
+    elif module_modifier_menu_selection == "2":
+        # remove an item, unless there are none yet
+        # perhaps this should suggest deletion if only one item?
+        if not target_module.item_list:
+            print("\nThe module is empty. Please add some items first.")
+            module_modifier_menu(target_module)
+        remove_item_name = input("\nInput item to be removed: ")
+        target_module.remove_item(remove_item_name)
+        module_modifier_menu(target_module)
+    elif module_modifier_menu_selection == "3":
+        target_module.save_as_module()
+
+module_dictionary = {}
+
+with open("module_list_storage.json", "r") as f:
+    module_dictionary_pickled = json.load(f)
+
+module_dictionary = jsonpickle.decode(module_dictionary_pickled, classes=[ListModule, ListItem])
 
 start_menu()
 
