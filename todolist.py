@@ -4,19 +4,15 @@
 import json
 import jsonpickle
 
+### add the module delete function
 
-### see if we can load the module dictionary
-
+### add list rename to list modifier menu
 
 ### need to make a list addable to a list
 
 ### change list display into numbered list and make that number the toggle selector/remove selector
 
-### need a different display string without status for module screen
-
 ### is a manual save option required for module edit? can we just save when program ends? write simple end() function to make sure the save doesn't get skipped
-
-### add list rename to list odifier menu
 
 ### should modules have descriptions?
 
@@ -127,20 +123,35 @@ class ListModule:
         if self.list_name in module_dictionary:
             overwrite_choice = input("\nA module with this name already exists. Would you like to overwrite the existing module y/n? ")
             if overwrite_choice == "n":
-                print("You can rename thre list and save as a new module\n")
+                print("You can rename the list and save as a new module\n")
                 list_modifier_menu(self)
-            else:
-                if not self:
-                    print("Can not save empty list as module")
-                    list_modifier_menu(self)
-                self.all_undone(0)
-                module_dictionary[self.list_name] = self
+        else:
+            if not self:
+                print("Can not save empty list as module")
+                list_modifier_menu(self)
+            self.all_undone(0)
+            module_dictionary[self.list_name] = self
+            #save to json
+            json_compatible_module_dict = jsonpickle.encode(module_dictionary)
+            with open("module_list_storage.json", "w") as f:
+                json.dump(json_compatible_module_dict, f, indent=2, )
+            print(f"Added to modules as {self.list_name}")
+            list_modifier_menu(self)
+
+    def module_delete(self):
+            are_you_sure = input(f"\nAre you sure you wish to permanently delete '{self.list_name}'?  y/n: ")
+            if are_you_sure == "y":
+                del module_dictionary[self.list_name]
+                print(f"\n'{self.list_name}' successfully deleted")
                 #save to json
                 json_compatible_module_dict = jsonpickle.encode(module_dictionary)
                 with open("module_list_storage.json", "w") as f:
                     json.dump(json_compatible_module_dict, f, indent=2, )
-                print(f"Added to modules as {self.list_name}")
-                list_modifier_menu(self)
+                module_display_menu()
+            else:
+                module_display_menu()
+
+
     
 def start_menu(message="Welcome to the modular list maker. Please select from the menu below"):
     print(f"""{message}
@@ -209,10 +220,11 @@ What would you like to do with your list?
         list_modifier_menu(target_list)
     elif modifier_menu_selection == "4":
         target_list.save_as_module()
+        list_modifier_menu(target_list)
 
 def module_display_menu():
     # first display all the modules
-    print("These are the currently saved modules\n")
+    print("\nThese are the currently saved modules\n")
     for l in module_dictionary:
         l_test = module_dictionary[l]
         l_test.display_as_line()
@@ -232,6 +244,14 @@ What would you like to do?
         module_display_menu()
     elif module_menu_selection == "4":
         start_menu()
+    elif module_menu_selection == "2":
+        # delete the module, if input correct, with confirmation
+        delete_target = input("\nWhich module would you like to delete? ")
+        if delete_target not in module_dictionary:
+            print("\nThat module does not exist")
+            module_display_menu()
+        else:
+            module_dictionary[delete_target].module_delete()
     elif module_menu_selection == "3":
         selected_module = input("\nWhich module would you like to edit? ")
         module_modifier_menu(module_dictionary[selected_module])
