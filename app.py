@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-# next up: add to list, remove from list
+# next up: store the lists across sessions using JSON
 
 import streamlit as st
 from helper import *
@@ -27,16 +27,42 @@ current_list = st.session_state["current_list"]
 ordered_list = dict(sorted(current_list.items(), key=lambda item: (-item[1], item[0])))
 
 def list_draw(target_list):
-    for item, state in target_list.items():
-        def update_state(name=item):
-            st.session_state["current_list"][name] = st.session_state[f"cb_{name}"]
+        for item, state in target_list.items():
+            def update_state(name=item):
+                st.session_state["current_list"][name] = st.session_state[f"cb_{name}"]
 
-        st.checkbox(
-            label=item,
-            #value = state (had originally, seems superfluous)
-            key=f"cb_{item}",
-            on_change=update_state
-        )  
+            @st.dialog(title="Delete this item?", dismissible=False)
+            def delete_confirm(name=item):
+                col1, col2 = st.columns(2)
+                with col1:
+                    if st.button("OK", type="primary", use_container_width=True):
+                        delete_update(name)
+                        st.rerun()
+                with col2:
+                    if st.button("Cancel", use_container_width=True):
+                        st.rerun()
+
+            def delete_update(name=item):
+                
+                del st.session_state["current_list"][name]
+                del st.session_state[f"{item}_delete_button"]
+            
+            col1, col2 =st.columns([1, 1])
+            #list_container = st.container(horizontal=True)
+            #with list_container:
+            with col1:
+                st.checkbox(
+                    label=item,
+                    #value = state (had originally, seems superfluous)
+                    key=f"cb_{item}",
+                    on_change=update_state
+                )
+            with col2:
+                st.button(
+                    label=f"🗑️",
+                    key=f"{item}_delete_button",
+                    on_click=delete_confirm
+                )
 
 control_button_container = st.container(horizontal=True)
 with control_button_container:
