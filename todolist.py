@@ -4,7 +4,7 @@
 import json
 import jsonpickle
 
-### add the module delete function
+### try to hook up streamlit basics in new branch
 
 ### add list rename to list modifier menu
 
@@ -151,18 +151,13 @@ class ListModule:
             else:
                 module_display_menu()
 
-
     
-def start_menu(message="Welcome to the modular list maker. Please select from the menu below"):
-    print(f"""{message}
-          
-1) Create a new list
-2) View an existing list
-3) View list modules
-4) Exit program
-""")
+def start_menu_message():
+    return ["1) Create a new list", "2) View an existing list", "3) View list modules", "4) Exit program"]
+
+def start_menu(menu_selection):
     valid_menu_selections = ["1", "2", "3", "4"]
-    menu_selection = input("Please input the number of your choice: ")
+#    menu_selection = input("Please input the number of your choice: ")
     if menu_selection not in valid_menu_selections:
         start_menu("Please select a number from the menu")
     elif menu_selection == "4":
@@ -298,7 +293,7 @@ with open("module_list_storage.json", "r") as f:
 
 module_dictionary = jsonpickle.decode(module_dictionary_pickled, classes=[ListModule, ListItem])
 
-start_menu()
+# start_menu()
 
 # test_list = ListModule("test_list")
 # test_list.add_item("cooking")
