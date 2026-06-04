@@ -1,12 +1,9 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-# next up: update json format so we have dictionaries with the name, the actual list dictionary
-# also: practice expander logic using last_list
-# works currently with "current list" as a special case. Need to figure out how to generalize.
-# All lists will need the same format, same ordering logic, same key updates.
-# Perhaps the difference between "modules" and "base" is a boolean dictionary property?
-# first step is a dictionary design that can contain all the information that might be needed
+# add an item rename feature
+# move the functions out of app.py, getting super crowded
+# add a module
 
 # when adding lists, will need to check if items already exist in any other existing list, else key errors will arise
 
@@ -92,6 +89,9 @@ else:
     # otherwise we need to save the latest state to json
     data_save()
 
+if "edit_button_input" not in st.session_state:
+    st.session_state.edit_button_input = False
+
 if "add_button_input" not in st.session_state:
     st.session_state.add_button_input = False
 
@@ -125,9 +125,14 @@ def current_list_draw():
             def delete_update(name=item):
                 
                 del st.session_state["json_data"]["existing_lists"][current_key][sub_dict]["content_list"][name]
-                del st.session_state[f"{item}_delete_button"]
+                del st.session_state[f"{name}_delete_button"]
             
-            col1, col2 =st.columns([1, 1])
+            def edit_confirm(name=item):
+                # trigger session_state, set the item key
+                st.session_state.edit_button_input = True
+                st.session_state["item_to_be_edited"] = name
+            
+            col1, col2, col3 =st.columns([10, 1, 1])
             with col1:
                 st.checkbox(
                     label=item,
@@ -137,7 +142,14 @@ def current_list_draw():
                 )
             with col2:
                 st.button(
-                    label=f"🗑️",
+                    label="✏️",
+                    key=f"{item}_edit_button",
+                    on_click=edit_confirm
+                )
+
+            with col3:
+                st.button(
+                    label="🗑️",
                     key=f"{item}_delete_button",
                     on_click=delete_confirm
                 )
@@ -202,5 +214,39 @@ if st.session_state.add_button_input:
             st.session_state.add_button_input = False
             st.rerun()  # Instantly refreshes to show updated state
 
-   
+if st.session_state.edit_button_input:
+    # retrieve item to be edited
+    item_name = st.session_state["item_to_be_edited"]
+    with st.form(key="edit_item_name_input"):
+        user_input = st.text_input(f"Edit '{item_name}':")
+        submit_button = st.form_submit_button(label="Confirm", type="primary")
+        if submit_button:
+            if user_input:
+                # test to see if it already exists in any sub_dicts
+                current_key = st.session_state["json_data"]["current_list"]
+                if not item_crosschecker(user_input, 0, st.session_state["json_data"]["existing_lists"][current_key]):
+                    # replace it, and delete the now unneeded key
+                    #st.session_state["json_data"]["existing_lists"][current_key]["tier_0_list"]["content_list"][user_input] = st.session_state["json_data"]["existing_lists"][current_key]["tier_0_list"]["content_list"].pop(item_name)
+                    # get the dictionary with items
+                    content_dict = st.session_state["json_data"]["existing_lists"][current_key]["tier_0_list"]["content_list"]
+                    # retrive the old value to be passed
+                    old_value = content_dict[item_name]
+                    # deal with checkbox and edit button keys
+                    st.session_state[f"cb_{user_input}"] = old_value
+                    del st.session_state[f"cb_{item_name}"]
+                    del st.session_state[f"{item_name}_edit_button"]
+                    # now add the new key and value
+                    content_dict[user_input] = old_value
+                    # delete the old one
+                    del content_dict[item_name]
+                    # and replace into session state
+                    st.session_state["json_data"]["existing_lists"][current_key]["tier_0_list"]["content_list"] = content_dict
+                    st.session_state.edit_button_input = False
+                    st.rerun()  # Instantly refreshes to show updated state
+                else:
+                    # don't add it
+                    st.warning("This item name already in use")
+            else:
+                st.warning("Blank items are not permitted")
+    
 current_list_draw()
