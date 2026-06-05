@@ -1,62 +1,19 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-# add an item rename feature
+# lots of nesting could be avoided by setting up an existing lists dictionary instead of using root always
 # move the functions out of app.py, getting super crowded
 # add a module
 
 # when adding lists, will need to check if items already exist in any other existing list, else key errors will arise
 
-"""
-dictionary design. every dictionary needs a nested dictionary dict_actual_list of item: T/F pairs.
-It also needs a list_name key and value
-It also needs a list_tier: 0/1 pair
-All these dictionaries need to exist in a top dictionary that holds exclusively lists and sublists for this particular task list
-And all task list master dictionaries exist in the json_dictionary[lists] tier.
-json_dictionary[current_shown_list] should contain key for last list used
-then we can just load the last list used by referencing with that key
-
-will also need to think about how to build a new list from scratch.
-"""
 
 import streamlit as st
 import json
 #from helper import *
 from dictionary_scratchpad import *
 
-baseline_json_dict = {
-  "current_list": "",
-  "existing_lists": {},
-  "modules": {}
-}
 
-last_list = {"red": False, "yellow": False, "green": True, "purple": False, "black": False}
-
-def data_load():
-    # import json
-    try:
-        with open("list_storage.json", "r") as file:
-            json_dictionary = json.load(file)
-    except json.decoder.JSONDecodeError:
-        # Triggered if the file is completely empty or has invalid syntax
-        json_dictionary = baseline_json_dict.copy()
-    except FileNotFoundError:
-        # Triggered if the file does not exist at all
-        json_dictionary = baseline_json_dict.copy()
-    return json_dictionary
-
-def data_save():
-    with open("list_storage.json", "w") as file:
-        json_dictionary = st.session_state["json_data"]
-        json.dump(json_dictionary, file, indent=2)
-
-def current_and_populated():
-    current_and_populated_exists = False
-    if st.session_state["json_data"]["current_list"]:
-        current_key = st.session_state["json_data"]["current_list"]
-        if st.session_state["json_data"]["existing_lists"][current_key]:
-            current_and_populated_exists = True
-    return current_and_populated_exists
 
 def current_list_sorter():
     current_key = st.session_state["json_data"]["current_list"]
@@ -219,7 +176,11 @@ if st.session_state.edit_button_input:
     item_name = st.session_state["item_to_be_edited"]
     with st.form(key="edit_item_name_input"):
         user_input = st.text_input(f"Edit '{item_name}':")
-        submit_button = st.form_submit_button(label="Confirm", type="primary")
+        edit_form_button_container = st.container(horizontal=True) 
+        with edit_form_button_container:
+            submit_button = st.form_submit_button(label="Confirm", type="primary")
+            cancel_button = st.form_submit_button(label="Cancel")
+
         if submit_button:
             if user_input:
                 # test to see if it already exists in any sub_dicts
@@ -248,5 +209,9 @@ if st.session_state.edit_button_input:
                     st.warning("This item name already in use")
             else:
                 st.warning("Blank items are not permitted")
+        if cancel_button:
+            st.session_state.edit_button_input = False
+            st.rerun()  # Instantly refreshes to show updated state
+
     
 current_list_draw()

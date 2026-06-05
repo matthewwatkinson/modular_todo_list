@@ -1,6 +1,16 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
+import json
+import streamlit as st
+
+
+baseline_json_dict = {
+  "current_list": "",
+  "existing_lists": {},
+  "modules": {}
+}
+
 def list_builder(name: str, content_list=[], tier=0):
     list_container = {}
     list_container["list_name"] = name
@@ -46,6 +56,31 @@ def list_crosschecker(new: dict, existing: dict):
             accepted_list.append(item)
     return accepted_list
 
+def data_load():
+    # import json
+    try:
+        with open("list_storage.json", "r") as file:
+            json_dictionary = json.load(file)
+    except json.decoder.JSONDecodeError:
+        # Triggered if the file is completely empty or has invalid syntax
+        json_dictionary = baseline_json_dict.copy()
+    except FileNotFoundError:
+        # Triggered if the file does not exist at all
+        json_dictionary = baseline_json_dict.copy()
+    return json_dictionary
+
+def data_save():
+    with open("list_storage.json", "w") as file:
+        json_dictionary = st.session_state["json_data"]
+        json.dump(json_dictionary, file, indent=2)
+
+def current_and_populated():
+    current_and_populated_exists = False
+    if st.session_state["json_data"]["current_list"]:
+        current_key = st.session_state["json_data"]["current_list"]
+        if st.session_state["json_data"]["existing_lists"][current_key]:
+            current_and_populated_exists = True
+    return current_and_populated_exists
 
 # test_list = ["red", "yellow", "green", "purple", "black"]
 # another_test_list = ["1", "x", "gg"]
