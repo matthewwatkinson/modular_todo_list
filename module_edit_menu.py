@@ -62,9 +62,7 @@ module_edit_list_sorter(module_key)
 
 st.title(f"Edit {module_key}")
 
-module_new_item_button =  st.button("➕", key="module_new_item_button")   
-
-module_edit_list_draw(module_key)
+module_new_item_button =  st.button("➕", key="module_new_item_button")
 
 if module_new_item_button:
         st.session_state.module_item_add_button_input = True
@@ -94,6 +92,8 @@ if st.session_state.module_item_add_button_input:
         if cancel_button:
             st.session_state.module_item_add_button_input = False
             st.rerun()
+
+module_edit_list_draw(module_key)
 
 if st.button("Return"):
     st.switch_page("module_summary_menu.py")
