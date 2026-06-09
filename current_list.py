@@ -13,8 +13,6 @@ import json
 #from helper import *
 from dictionary_scratchpad import *
 
-
-
 def current_list_sorter():
     current_key = st.session_state["json_data"]["current_list"]
     for sub_dict in st.session_state["json_data"]["existing_lists"][current_key]:
@@ -117,12 +115,15 @@ with control_button_container:
     new_item_button =  st.button("➕", key="new_item_button")
     mark_all_done_button = st.button("mark all done", key="mark_all_done_button")
     clear_all_button = st.button("clear all", key="clear_all_button")
+    navigate_to_modules_button = st.button("modules (TEMP)", key="current_list_to_modules_button")
     if new_item_button:
         st.session_state.add_button_input = True
     if mark_all_done_button:
         st.session_state.mark_all_done = True
     if clear_all_button:
         st.session_state.clear_all = True
+    if navigate_to_modules_button:
+        st.switch_page("module_summary_menu.py")
 
 if st.session_state.mark_all_done:
     current_key = st.session_state["json_data"]["current_list"]

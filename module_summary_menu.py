@@ -5,19 +5,18 @@
 
 import streamlit as st
 import json
-#from helper import *
 from dictionary_scratchpad import *
 
 # no JSON loading should be necessary in final form, should be handled on startup in list script
 
-json_dictionary = data_load()
+# json_dictionary = data_load()
 
-#but only use json if we don't have a session state
-if "json_data" not in st.session_state:
-    st.session_state["json_data"] = json_dictionary
-else:
-    # otherwise we need to save the latest state to json
-    data_save()
+# #but only use json if we don't have a session state
+# if "json_data" not in st.session_state:
+#     st.session_state["json_data"] = json_dictionary
+# else:
+#     # otherwise we need to save the latest state to json
+#     data_save()
 
 
 if "module_edit_button_input" not in st.session_state:
@@ -47,13 +46,7 @@ def module_list_draw():
             
             del st.session_state["json_data"]["modules"][name]
             del st.session_state[f"{name}_delete_button"]
-
-        def edit_confirm(name=key):
-            # trigger session_state, set the item key
-            st.session_state.module_edit_button_input = True
-            st.session_state["module_to_be_edited"] = name
- 
-   
+    
         col1, col2, col3, col4 =st.columns([8, 2, 1, 1])
 
         with col1:
@@ -63,11 +56,14 @@ def module_list_draw():
             st.write(f"({len(st.session_state["json_data"]["modules"][key])} items)")
 
         with col3:
-            st.button(
+             if st.button(
                 label="✏️",
                 key=f"{key}_edit_button",
-                on_click=edit_confirm
-            )
+            ):
+                # record the module to be edited
+                st.session_state.module_to_edit = key
+                # switch to edit page
+                st.switch_page("module_edit_menu.py")
 
         with col4:
             st.button(
@@ -78,44 +74,44 @@ def module_list_draw():
 
 module_list_sorter()
 
+# use all thise code in module edit menu
+# if st.session_state.module_edit_button_input:
+#     # retrieve module to be edited
+#     module_name = st.session_state["module_to_be_edited"]
+#     with st.form(key="edit_module_name_input"):
+#         user_input = st.text_input(f"Edit name for '{module_name}':")
+#         edit_form_button_container = st.container(horizontal=True) 
+#         with edit_form_button_container:
+#             submit_button = st.form_submit_button(label="Confirm", type="primary")
+#             cancel_button = st.form_submit_button(label="Cancel")
 
-if st.session_state.module_edit_button_input:
-    # retrieve module to be edited
-    module_name = st.session_state["module_to_be_edited"]
-    with st.form(key="edit_module_name_input"):
-        user_input = st.text_input(f"Edit name for '{module_name}':")
-        edit_form_button_container = st.container(horizontal=True) 
-        with edit_form_button_container:
-            submit_button = st.form_submit_button(label="Confirm", type="primary")
-            cancel_button = st.form_submit_button(label="Cancel")
-
-        if submit_button:
-            if user_input:
-                # test to see if it already exists in the session_state
-                if user_input in st.session_state["json_data"]["modules"]:
-                    # don't add it
-                    st.warning("A module with this name already exists")
-                else:
-                    # replace it, and delete the now unneeded key
-                    content_dict = st.session_state["json_data"]["modules"]
-                    # retrive the old list to be passed
-                    old_list = content_dict[module_name]
-                    # delete old edit button keys
-                    del st.session_state[f"{module_name}_edit_button"]
-                    # now add the new module key and value
-                    content_dict[user_input] = old_list
-                    # delete the old one
-                    del content_dict[module_name]
-                    # and replace into session state
-                    st.session_state["json_data"]["modules"] = content_dict
-                    st.session_state.module_edit_button_input = False
-                    #refresh
-                    st.rerun()
-            else:
-                st.warning("Module name can not be blank")
-        if cancel_button:
-            st.session_state.module_edit_button_input = False
-            st.rerun()
+#         if submit_button:
+#             if user_input:
+#                 # test to see if it already exists in the session_state
+#                 if user_input in st.session_state["json_data"]["modules"]:
+#                     # don't add it
+#                     st.warning("A module with this name already exists")
+#                 else:
+#                     # replace it, and delete the now unneeded key
+#                     content_dict = st.session_state["json_data"]["modules"]
+#                     # retrive the old list to be passed
+#                     old_list = content_dict[module_name]
+#                     # delete old edit button keys
+#                     del st.session_state[f"{module_name}_edit_button"]
+#                     # now add the new module key and value
+#                     content_dict[user_input] = old_list
+#                     # delete the old one
+#                     del content_dict[module_name]
+#                     # and replace into session state
+#                     st.session_state["json_data"]["modules"] = content_dict
+#                     st.session_state.module_edit_button_input = False
+#                     #refresh
+#                     st.rerun()
+#             else:
+#                 st.warning("Module name can not be blank")
+#         if cancel_button:
+#             st.session_state.module_edit_button_input = False
+#             st.rerun()
 
 
 st.title("Modules")

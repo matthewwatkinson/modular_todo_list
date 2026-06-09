@@ -28,7 +28,7 @@ list_title = list_key
 list_contents = st.session_state["json_data"]["modules"][list_key]
 
 # put in a container with two columns, one for edit
-st.title(list_title)
+st.title(st.session_state.module_to_edit)
 
 for item in list_contents:
     st.write(item)

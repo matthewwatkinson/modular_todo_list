@@ -27,14 +27,14 @@
     }
   },
   "modules": {
+    "Camping gear": [
+      "Tent",
+      "Chair"
+    ],
     "Trad gear": [
       "cams",
       "nut tool",
       "alpine draws"
-    ],
-    "Camping gear": [
-      "Tent",
-      "Chair"
     ]
   }
 }
