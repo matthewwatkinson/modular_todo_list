@@ -26,7 +26,6 @@ def item_crosschecker(new_item: str, new_item_tier: int, check_dict: dict):
     # flag if action needs to be taken outside of function (action: don't include new_item in the list being added)
     cancel_insert = False
     for sub_dict in check_dict:
-        # will this list mod work when multiple sub_dicts?
         for key in list(check_dict[sub_dict]["content_list"].keys()):
             if key == new_item:
                 # compare tiers
@@ -81,33 +80,3 @@ def current_and_populated():
         if st.session_state["json_data"]["existing_lists"][current_key]:
             current_and_populated_exists = True
     return current_and_populated_exists
-
-# test_list = ["red", "yellow", "green", "purple", "black"]
-# another_test_list = ["1", "x", "gg"]
-# check_list = ["shoe", "sock", "red", "gg", "black"]
-
-# test_dict = list_builder("test", test_list, 1)
-# another_test_dict = list_builder("another_test", another_test_list, 1)
-# check_dict = list_builder("check", check_list, 1)
-# #print(check_dict)
-# test_summary_dict = {}
-# test_summary_dict[test_dict["list_name"]] = test_dict
-# test_summary_dict[another_test_dict["list_name"]] = another_test_dict
-# #print(test_summary_dict)
-
-# # check when no dupes
-#first_check = item_crosschecker("hair", 1, test_summary_dict)
-#print(first_check)
-
-# check when dupe, and new item is in junior list
-#second_check = item_crosschecker("green", 1, test_summary_dict)
-#print(second_check)
-
-# check when dupe, and new item is senior
-#third_check = item_crosschecker("green", 0, test_summary_dict)
-#print(third_check)
-#print(test_summary_dict)
-
-#big_check = list_crosschecker(check_dict, test_summary_dict)
-#print(big_check)
-#print(test_summary_dict)

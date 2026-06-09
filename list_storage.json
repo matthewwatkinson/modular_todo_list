@@ -6,22 +6,22 @@
         "list_name": "New list",
         "list_tier": 0,
         "content_list": {
-          "approach shoes": true,
-          "coffee kit": true,
-          "multi backpack": true,
-          "onsen kit": true,
-          "rope": true,
-          "sunblock": true,
-          "t-shirts": true,
-          "toothbrush etc": true,
-          "topos": true,
-          "trousers": true,
-          "underwear": true,
+          "approach shoes": false,
+          "coffee kit": false,
+          "down/jackets": false,
           "food": false,
+          "multi backpack": false,
+          "onsen kit": false,
           "pajamas": false,
+          "rope": false,
           "shorts": false,
-          "water": false,
-          "down/jackets": true
+          "sunblock": false,
+          "t-shirts": false,
+          "toothbrush etc": false,
+          "topos": false,
+          "trousers": false,
+          "underwear": false,
+          "water": false
         }
       }
     }

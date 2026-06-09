@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-# get the edit button logic done
+# get the edit button logic done - have done name edit but should bring up the new edit page with list items
 
 import streamlit as st
 import json
@@ -19,22 +19,15 @@ else:
     # otherwise we need to save the latest state to json
     data_save()
 
-#if "module_list_never_sorted" not in st.session_state:
-#    st.session_state.module_list_never_sorted = True
 
 if "module_edit_button_input" not in st.session_state:
     st.session_state.module_edit_button_input = False
 
 
-#module_dict = st.session_state["json_data"]["modules"]
-
 def module_list_sorter():
     module_list_to_sort = st.session_state["json_data"]["modules"]
     sorted_dict = dict(sorted(module_list_to_sort.items(), key=lambda item: item[0].lower()))
     st.session_state["json_data"]["modules"] = sorted_dict
-    #if st.session_state.module_list_never_sorted == True:
-    #    st.session_state.module_list_never_sorted = False
-    #    st.rerun()
 
 def module_list_draw():
     for key in st.session_state["json_data"]["modules"]:
