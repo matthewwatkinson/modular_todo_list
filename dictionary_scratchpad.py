@@ -80,3 +80,51 @@ def current_and_populated():
         if st.session_state["json_data"]["existing_lists"][current_key]:
             current_and_populated_exists = True
     return current_and_populated_exists
+
+def module_edit_list_sorter(key):
+    unsorted_list = st.session_state["json_data"]["modules"][key]
+    sorted_list = sorted(unsorted_list)
+    st.session_state["json_data"]["modules"][key] = sorted_list
+
+def module_edit_list_draw(key):
+    for item in st.session_state["json_data"]["modules"][key]:
+
+        @st.dialog(title="Are you sure you want to delete this item?", dismissible=False)
+        def delete_confirm(name=item):
+            col1, col2 = st.columns(2)
+            with col1:
+                if st.button("OK", type="primary", use_container_width=True):
+                    delete_update(name)
+                    st.rerun()
+            with col2:
+                if st.button("Cancel", use_container_width=True):
+                    st.rerun()
+
+        def delete_update(name=item):
+            delete_index = st.session_state["json_data"]["modules"][key].index(name)
+            del st.session_state["json_data"]["modules"][key][delete_index]
+            del st.session_state[f"{name}_delete_button"]
+
+        def edit_confirm(name=item):
+            # trigger session_state, set the item key
+            st.session_state.module_item_edit_button_input = True
+            st.session_state["module_item_to_be_edited"] = name
+
+        col1, col2, col3 =st.columns([10, 1, 1])
+
+        with col1:
+            st.write(f"{item}")
+
+        with col2:
+             st.button(
+                label="✏️",
+                key=f"{item}_edit_button",
+                on_click=edit_confirm
+            )
+
+        with col3:
+            st.button(
+                label="🗑️",
+                key=f"{item}_delete_button",
+                on_click=delete_confirm
+            )

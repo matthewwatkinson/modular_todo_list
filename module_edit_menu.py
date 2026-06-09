@@ -8,27 +8,92 @@ import json
 #from helper import *
 from dictionary_scratchpad import *
 
-# no JSON loading should be necessary in final form, should be handled on startup in list script
+if "module_item_edit_button_input" not in st.session_state:
+    st.session_state.module_item_edit_button_input = False
 
-json_dictionary = data_load()
+if "module_item_add_button_input" not in st.session_state:
+    st.session_state.module_item_add_button_input = False
 
-#but only use json if we don't have a session state
-if "json_data" not in st.session_state:
-    st.session_state["json_data"] = json_dictionary
-else:
-    # otherwise we need to save the latest state to json
-    data_save()
 
-# using a passed key (hardcoded for now)
+# using a passed key
 # get the list name, title it with an edit button
 # for each item in the list, write it and have an edit or delete button (steal from module menu)
+# have a return button to go back to module list
+# need a special case for a New Module
 
-list_key = "Camping gear"
-list_title = list_key
-list_contents = st.session_state["json_data"]["modules"][list_key]
+module_key = st.session_state.module_to_edit
+module_contents = st.session_state["json_data"]["modules"][module_key]
 
-# put in a container with two columns, one for edit
-st.title(st.session_state.module_to_edit)
+if st.session_state.module_item_edit_button_input:
+    # retrieve item to be edited
+    item_name = st.session_state["module_item_to_be_edited"]
+    with st.form(key="module_edit_item_name_input"):
+        user_input = st.text_input(f"Edit '{item_name}':")
+        edit_form_button_container = st.container(horizontal=True) 
+        with edit_form_button_container:
+            submit_button = st.form_submit_button(label="Confirm", type="primary")
+            cancel_button = st.form_submit_button(label="Cancel")
 
-for item in list_contents:
-    st.write(item)
+        if submit_button:
+            if user_input:
+                # test to see if it already exists in the module
+                if user_input not in module_contents:
+                    # replace it, and delete the now unneeded key
+                    old_value_index = module_contents.index(item_name)
+                    module_contents.pop(old_value_index)
+                    module_contents.append(user_input)
+                    # deal with edit button keys
+                    del st.session_state[f"{item_name}_edit_button"]
+                    # and replace into session state
+                    st.session_state["json_data"]["modules"][module_key] = module_contents
+                    st.session_state.module_item_edit_button_input = False
+                    st.rerun()  # Instantly refreshes to show updated state
+                else:
+                    # don't add it
+                    st.warning("This item name already in use")
+            else:
+                st.warning("Blank items are not permitted")
+        if cancel_button:
+            st.session_state.module_item_edit_button_input = False
+            st.rerun()  # Instantly refreshes to show updated state
+
+
+module_edit_list_sorter(module_key)
+
+st.title(f"Edit {module_key}")
+
+module_new_item_button =  st.button("➕", key="module_new_item_button")   
+
+module_edit_list_draw(module_key)
+
+if module_new_item_button:
+        st.session_state.module_item_add_button_input = True
+
+if st.session_state.module_item_add_button_input:
+    with st.form(key="new_module_item_input"):
+        user_input = st.text_input("Add an item:")
+        form_button_container = st.container(horizontal=True) 
+        with form_button_container:
+            submit_button = st.form_submit_button(label="Add", type="primary")
+            cancel_button = st.form_submit_button(label="Cancel")
+
+        if submit_button:
+            if user_input:
+                # test to see if it already exists in any sub_dicts
+                if user_input not in module_contents:
+                    # add it and reset input key
+                    module_contents.append(user_input)
+                    st.session_state["json_data"]["modules"][module_key] = module_contents
+                    st.session_state.module_item_add_button_input = False
+                    st.rerun()
+                else:
+                    # don't add it
+                    st.warning("Item already exists")
+            else:
+                st.warning("Please enter some text before submitting.")
+        if cancel_button:
+            st.session_state.module_item_add_button_input = False
+            st.rerun()
+
+if st.button("Return"):
+    st.switch_page("module_summary_menu.py")

@@ -6,35 +6,38 @@
         "list_name": "New list",
         "list_tier": 0,
         "content_list": {
-          "approach shoes": false,
-          "coffee kit": false,
-          "down/jackets": false,
-          "food": false,
-          "multi backpack": false,
-          "onsen kit": false,
-          "pajamas": false,
-          "rope": false,
-          "shorts": false,
-          "sunblock": false,
-          "t-shirts": false,
-          "toothbrush etc": false,
-          "topos": false,
-          "trousers": false,
-          "underwear": false,
-          "water": false
+          "approach shoes": true,
+          "coffee kit": true,
+          "down/jackets": true,
+          "food": true,
+          "multi backpack": true,
+          "onsen kit": true,
+          "pajamas": true,
+          "rope": true,
+          "shorts": true,
+          "sunblock": true,
+          "t-shirts": true,
+          "toothbrush etc": true,
+          "topos": true,
+          "trousers": true,
+          "underwear": true,
+          "water": true
         }
       }
     }
   },
   "modules": {
     "Camping gear": [
-      "Tent",
-      "Chair"
+      "Bucket",
+      "Chair",
+      "Flag",
+      "Tent"
     ],
     "Trad gear": [
+      "alpine draws",
       "cams",
       "nut tool",
-      "alpine draws"
+      "nuts"
     ]
   }
 }
