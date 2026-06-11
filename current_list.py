@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-# lots of nesting could be avoided by setting up an existing lists dictionary instead of using root always
-# move the functions out of app.py, getting super crowded
-# add a module
-
+# basic code for summoning modules is at bottom
+# next step is to add this summoned module as a list
+# need to study the dictionary format and expander logic
+# let's start without edit/delete options
 # when adding lists, will need to check if items already exist in any other existing list, else key errors will arise
+# think carefully again about where to delete dupe items depending on list seniority etc
 
 
 import streamlit as st
@@ -39,7 +40,7 @@ if "json_data" not in st.session_state:
         current_key = st.session_state["json_data"]["current_list"]
         for sub_dict in st.session_state["json_data"]["existing_lists"][current_key]:
             for key, value in st.session_state["json_data"]["existing_lists"][current_key][sub_dict]["content_list"].items():
-                st.session_state[f"cb_{key}"] = value
+                st.session_state[f"cb_{current_key}_{sub_dict}_{key}"] = value
 else:
     # otherwise we need to save the latest state to json
     data_save()
@@ -56,59 +57,100 @@ if "mark_all_done" not in st.session_state:
 if "clear_all" not in st.session_state:
     st.session_state.clear_all = False
 
+if "module_add_key" not in st.session_state:
+    st.session_state.module_add_key = False
+
 current_list_sorter()
 
-def current_list_draw():
+def current_list_modules_draw(module_key_list):
     current_key = st.session_state["json_data"]["current_list"]
-    for sub_dict in st.session_state["json_data"]["existing_lists"][current_key]:
-        target_dict = st.session_state["json_data"]["existing_lists"][current_key][sub_dict]["content_list"]
-        for item in target_dict.keys():
-            def update_state(name=item):
-                st.session_state["json_data"]["existing_lists"][current_key][sub_dict]["content_list"][name] = st.session_state[f"cb_{name}"]
-
-            @st.dialog(title="Delete this item?", dismissible=False)
-            def delete_confirm(name=item):
-                col1, col2 = st.columns(2)
-                with col1:
-                    if st.button("OK", type="primary", use_container_width=True):
-                        delete_update(name)
-                        st.rerun()
-                with col2:
-                    if st.button("Cancel", use_container_width=True):
-                        st.rerun()
-
-            def delete_update(name=item):
-                
-                del st.session_state["json_data"]["existing_lists"][current_key][sub_dict]["content_list"][name]
-                del st.session_state[f"{name}_delete_button"]
-            
-            def edit_confirm(name=item):
-                # trigger session_state, set the item key
-                st.session_state.edit_button_input = True
-                st.session_state["item_to_be_edited"] = name
-            
-            col1, col2, col3 =st.columns([10, 1, 1])
-            with col1:
+    for sublist in module_key_list:
+        with st.expander(sublist):
+            for item in st.session_state["json_data"]["existing_lists"][current_key][sublist]["content_list"]:
                 st.checkbox(
-                    label=item,
-                    #value = state (had originally, seems superfluous)
-                    key=f"cb_{item}",
-                    on_change=update_state
-                )
-            with col2:
-                st.button(
-                    label="✏️",
-                    key=f"{item}_edit_button",
-                    on_click=edit_confirm
+                label=item,
+                # make the key completely unique: list/sublist/item
+                key=f"cb_{current_key}_{sublist}_{item}"
                 )
 
-            with col3:
-                st.button(
-                    label="🗑️",
-                    key=f"{item}_delete_button",
-                    on_click=delete_confirm
-                )
-                
+def current_list_draw(current_list_master):
+    current_key = st.session_state["json_data"]["current_list"]
+    target_dict = st.session_state["json_data"]["existing_lists"][current_key][current_list_master]["content_list"]
+    for item in target_dict.keys():
+        def update_state(name=item):
+            st.session_state["json_data"]["existing_lists"][current_key][current_list_master]["content_list"][name] = st.session_state[f"cb_{current_key}_{current_list_master}_{item}"]
+
+        @st.dialog(title="Delete this item?", dismissible=False)
+        def delete_confirm(name=item):
+            col1, col2 = st.columns(2)
+            with col1:
+                if st.button("OK", type="primary", use_container_width=True):
+                    delete_update(name)
+                    st.rerun()
+            with col2:
+                if st.button("Cancel", use_container_width=True):
+                    st.rerun()
+
+        def delete_update(name=item):
+            
+            del st.session_state["json_data"]["existing_lists"][current_key][current_list_master]["content_list"][name]
+            del st.session_state[f"{name}_delete_button"]
+        
+        def edit_confirm(name=item):
+            # trigger session_state, set the item key
+            st.session_state.edit_button_input = True
+            st.session_state["item_to_be_edited"] = name
+        
+        col1, col2, col3 =st.columns([10, 1, 1])
+        with col1:
+            st.checkbox(
+                label=item,
+                # make the key completely unique: list/sublist/item
+                key=f"cb_{current_key}_{current_list_master}_{item}",
+                on_change=update_state
+            )
+        with col2:
+            st.button(
+                label="✏️",
+                key=f"{item}_edit_button",
+                on_click=edit_confirm
+            )
+
+        with col3:
+            st.button(
+                label="🗑️",
+                key=f"{item}_delete_button",
+                on_click=delete_confirm
+            )
+
+def master_sub_list_sort_launch():
+    current_key = st.session_state["json_data"]["current_list"]
+    master_list = []
+    sub_lists = []
+    for sub_dict in st.session_state["json_data"]["existing_lists"][current_key]:
+        if st.session_state["json_data"]["existing_lists"][current_key][sub_dict]["list_tier"] == 0:
+            master_list.append(sub_dict)
+        else:
+            sub_lists.append(sub_dict)
+    for single_list in master_list:
+        current_list_draw(single_list)
+    current_list_modules_draw(sub_lists)
+
+def module_to_list():
+    # use selectbox key to identify module
+    module_to_list_key = st.session_state.module_add_key
+    # get a list of items and check whether already in list
+    filtered_list = []
+    unfiltered_list = st.session_state["json_data"]["modules"][module_to_list_key]
+    current_key = st.session_state["json_data"]["current_list"]
+    check_subject = st.session_state["json_data"]["existing_lists"][current_key]
+    for item in unfiltered_list:
+        if not item_crosschecker(item, 1, check_subject):
+            filtered_list.append(item)
+    # pass this module through list_builder()
+    module_as_dict = list_builder(module_to_list_key, filtered_list, 1)
+    # add the new dict into the current list's dictionary structure
+    st.session_state["json_data"]["existing_lists"][current_key][module_to_list_key] = module_as_dict
 
 control_button_container = st.container(horizontal=True)
 with control_button_container:
@@ -131,7 +173,7 @@ if st.session_state.mark_all_done:
         target_dict = st.session_state["json_data"]["existing_lists"][current_key][sub_dict]["content_list"]
         for key in target_dict.keys():
             st.session_state["json_data"]["existing_lists"][current_key][sub_dict]["content_list"][key] = True
-            st.session_state[f"cb_{key}"] = True
+            st.session_state[f"cb_{current_key}_{sub_dict}_{key}"] = True
     st.session_state.mark_all_done = False
     st.rerun()
 
@@ -141,7 +183,7 @@ if st.session_state.clear_all:
         target_dict = st.session_state["json_data"]["existing_lists"][current_key][sub_dict]["content_list"]
         for key in target_dict.keys():
             st.session_state["json_data"]["existing_lists"][current_key][sub_dict]["content_list"][key] = False
-            st.session_state[f"cb_{key}"] = False
+            st.session_state[f"cb_{current_key}_{sub_dict}_{key}"] = False
     st.session_state.clear_all = False
     st.rerun()
 
@@ -188,14 +230,13 @@ if st.session_state.edit_button_input:
                 current_key = st.session_state["json_data"]["current_list"]
                 if not item_crosschecker(user_input, 0, st.session_state["json_data"]["existing_lists"][current_key]):
                     # replace it, and delete the now unneeded key
-                    #st.session_state["json_data"]["existing_lists"][current_key]["tier_0_list"]["content_list"][user_input] = st.session_state["json_data"]["existing_lists"][current_key]["tier_0_list"]["content_list"].pop(item_name)
                     # get the dictionary with items
                     content_dict = st.session_state["json_data"]["existing_lists"][current_key]["tier_0_list"]["content_list"]
-                    # retrive the old value to be passed
+                    # retrieve the old value to be passed
                     old_value = content_dict[item_name]
                     # deal with checkbox and edit button keys
-                    st.session_state[f"cb_{user_input}"] = old_value
-                    del st.session_state[f"cb_{item_name}"]
+                    st.session_state[f"cb_{current_key}_tier_0_list_{user_input}"] = old_value
+                    del st.session_state[f"cb_{current_key}_tier_0_list_{item_name}"]
                     del st.session_state[f"{item_name}_edit_button"]
                     # now add the new key and value
                     content_dict[user_input] = old_value
@@ -213,6 +254,18 @@ if st.session_state.edit_button_input:
         if cancel_button:
             st.session_state.edit_button_input = False
             st.rerun()  # Instantly refreshes to show updated state
+  
+master_sub_list_sort_launch()
 
-    
-current_list_draw()
+if st.session_state.module_add_key:
+    with st.expander(st.session_state.module_add_key):
+        for item in st.session_state["json_data"]["modules"][st.session_state.module_add_key]:
+            st.write(item)
+
+if st.button("add module"):
+    # get the list for selection box
+    module_select_list = []
+    for module in st.session_state["json_data"]["modules"]:
+        module_select_list.append(module)
+    # select box
+    st.session_state.add_module_input = st.selectbox("hidden", options=module_select_list, index=None, placeholder="Select module to add", label_visibility="collapsed", key="module_add_key", on_change=module_to_list)

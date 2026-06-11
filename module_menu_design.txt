@@ -13,3 +13,5 @@ modules can be deleted and edited
 edited goes to separate editing screen, based on list screen
 
 there is a new module button which also goes to the editing screen via a name entry screen
+
+Might have checkboxes to left of list names, with option to create new list containing selected modules

@@ -6,22 +6,31 @@
         "list_name": "New list",
         "list_tier": 0,
         "content_list": {
-          "approach shoes": true,
-          "coffee kit": true,
-          "down/jackets": true,
-          "food": true,
-          "multi backpack": true,
-          "onsen kit": true,
-          "pajamas": true,
-          "rope": true,
-          "shorts": true,
-          "sunblock": true,
-          "t-shirts": true,
-          "toothbrush etc": true,
-          "topos": true,
-          "trousers": true,
-          "underwear": true,
-          "water": true
+          "approach shoe": false,
+          "down/jackets": false,
+          "multi-itch bakpack": false,
+          "rope": false,
+          "water": false
+        }
+      },
+      "Sport climbing gear": {
+        "list_name": "Sport climbing gear",
+        "list_tier": 1,
+        "content_list": {
+          "Grigri": false,
+          "Harness": false,
+          "Quickdraws": false,
+          "Rope": false
+        }
+      },
+      "Trad gear": {
+        "list_name": "Trad gear",
+        "list_tier": 1,
+        "content_list": {
+          "alpine draws": false,
+          "cams": false,
+          "nut tool": false,
+          "nuts": false
         }
       }
     }
@@ -43,7 +52,8 @@
       "alpine draws",
       "cams",
       "nut tool",
-      "nuts"
+      "nuts",
+      "trouser"
     ]
   }
 }

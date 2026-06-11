@@ -1,0 +1,9 @@
+top
+    current_list_key
+    existing lists
+        listA
+            item_list1
+            item_list2
+        listB
+            item_list2
+    modules

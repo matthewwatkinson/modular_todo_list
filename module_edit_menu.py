@@ -14,13 +14,6 @@ if "module_item_edit_button_input" not in st.session_state:
 if "module_item_add_button_input" not in st.session_state:
     st.session_state.module_item_add_button_input = False
 
-
-# using a passed key
-# get the list name, title it with an edit button
-# for each item in the list, write it and have an edit or delete button (steal from module menu)
-# have a return button to go back to module list
-# need a special case for a New Module
-
 module_key = st.session_state.module_to_edit
 module_contents = st.session_state["json_data"]["modules"][module_key]
 

@@ -23,18 +23,18 @@ def list_builder(name: str, content_list=[], tier=0):
 
 def item_crosschecker(new_item: str, new_item_tier: int, check_dict: dict):
     # check against a dict that represents the [current_shown_list] of the master dict (dict of list_builder_dicts)
-    # flag if action needs to be taken outside of function (action: don't include new_item in the list being added)
+    # returns True if item already exists
     cancel_insert = False
     for sub_dict in check_dict:
         for key in list(check_dict[sub_dict]["content_list"].keys()):
             if key == new_item:
                 # compare tiers
-                check_tier = check_dict[sub_dict]["list_tier"]
-                if new_item_tier < check_tier:
+                #check_tier = check_dict[sub_dict]["list_tier"]
+                #if new_item_tier < check_tier:
                     # new_item is in the senior dict, so delete from check_dict
-                    del check_dict[sub_dict]["content_list"][key]
-                else:
-                    cancel_insert = True
+                #    del check_dict[sub_dict]["content_list"][key]
+                #else:
+                cancel_insert = True
     return cancel_insert
 
 def list_crosschecker(new: dict, existing: dict):
