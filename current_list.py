@@ -2,8 +2,11 @@
 # -*- coding: utf-8 -*-
 
 # modules can now be summoned as lists
-# need to maintain expander open/close state
+
+# learned a tough lesson that callbacks need separate args=
+
 # need to sort module lists on check etc
+# need to update cb -> list items for module lists
 
 # need to make a formulaic way to define widget keys, especially as multiple lists become a thing
 
@@ -79,8 +82,8 @@ def current_list_draw(current_list_master):
     current_key = st.session_state["json_data"]["current_list"]
     target_dict = st.session_state["json_data"]["existing_lists"][current_key][current_list_master]["content_list"]
     for item in target_dict.keys():
-        def update_state(name=item):
-            st.session_state["json_data"]["existing_lists"][current_key][current_list_master]["content_list"][name] = st.session_state[f"cb_{current_key}_{current_list_master}_{item}"]
+        def update_state(name, key):
+            st.session_state["json_data"]["existing_lists"][current_key][current_list_master]["content_list"][name] = st.session_state[key]
 
         @st.dialog(title="Delete this item?", dismissible=False)
         def delete_confirm(name=item):
@@ -109,7 +112,7 @@ def current_list_draw(current_list_master):
                 label=item,
                 # make the key completely unique: list/sublist/item
                 key=f"cb_{current_key}_{current_list_master}_{item}",
-                on_change=update_state
+                on_change=update_state, args=(item, f"cb_{current_key}_{current_list_master}_{item}")
             )
         with col2:
             st.button(
