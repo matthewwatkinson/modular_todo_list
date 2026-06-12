@@ -48,7 +48,7 @@ if "json_data" not in st.session_state:
             for key, value in st.session_state["json_data"]["existing_lists"][current_key][sub_dict]["content_list"].items():
                 ref_key = widget_key_maker("cb", current_key, key)
                 st.session_state[ref_key] = value
-                #st.session_state[f"cb_{current_key}_{sub_dict}_{key}"] = value
+
 else:
     # otherwise we need to save the latest state to json
     data_save()
@@ -74,13 +74,13 @@ def current_list_modules_draw(module_key_list: dict):
     current_key = st.session_state["json_data"]["current_list"]
     for sublist in module_key_list:
         with st.expander(sublist, key=f"expander_{sublist}"):
-            for item in st.session_state["json_data"]["existing_lists"][current_key][sublist]["content_list"]:
+            target_dict = st.session_state["json_data"]["existing_lists"][current_key][sublist]["content_list"]
+            for item in target_dict:
                 unique_key = widget_key_maker("cb", current_key, item)
                 st.checkbox(
                 label=item,
-                # make the key completely unique: list/sublist/item
-                #key=f"cb_{current_key}_{sublist}_{item}"
-                key=unique_key
+                key=unique_key,
+                on_change=update_state, args=(item, unique_key, target_dict)
                 )
 
 
@@ -88,8 +88,8 @@ def current_list_draw(current_list_master):
     current_key = st.session_state["json_data"]["current_list"]
     target_dict = st.session_state["json_data"]["existing_lists"][current_key][current_list_master]["content_list"]
     for item in target_dict.keys():
-        def update_state(name, key):
-            st.session_state["json_data"]["existing_lists"][current_key][current_list_master]["content_list"][name] = st.session_state[key]
+        #def update_state(name, key):
+        #    st.session_state["json_data"]["existing_lists"][current_key][current_list_master]["content_list"][name] = st.session_state[key]
 
         @st.dialog(title="Delete this item?", dismissible=False)
         def delete_confirm(name=item):
@@ -107,7 +107,6 @@ def current_list_draw(current_list_master):
             del st.session_state["json_data"]["existing_lists"][current_key][current_list_master]["content_list"][name]
             del_key = widget_key_maker("delete", current_key, name)
             del st.session_state[del_key]
-            #del st.session_state[f"{name}_delete_button"]
         
         def edit_confirm(name=item):
             # trigger session_state, set the item key
@@ -119,16 +118,13 @@ def current_list_draw(current_list_master):
             unique_key = widget_key_maker("cb", current_key, item)
             st.checkbox(
                 label=item,
-                # make the key completely unique: list/sublist/item
-                #key=f"cb_{current_key}_{current_list_master}_{item}",
                 key=unique_key,
-                on_change=update_state, args=(item, unique_key)
+                on_change=update_state, args=(item, unique_key, target_dict)
             )
         with col2:
             unique_edit_key = widget_key_maker("edit", current_key, item)
             st.button(
                 label="✏️",
-                #key=f"{item}_edit_button",
                 key=unique_edit_key,
                 on_click=edit_confirm
             )
@@ -137,7 +133,6 @@ def current_list_draw(current_list_master):
             unique_del_key = widget_key_maker("delete", current_key, item)
             st.button(
                 label="🗑️",
-                #key=f"{item}_delete_button",
                 key=unique_del_key,
                 on_click=delete_confirm
             )
@@ -197,7 +192,6 @@ if st.session_state.mark_all_done:
         for key in target_dict.keys():
             unique_key = widget_key_maker("cb", current_key, key)
             st.session_state["json_data"]["existing_lists"][current_key][sub_dict]["content_list"][key] = True
-            #st.session_state[f"cb_{current_key}_{sub_dict}_{key}"] = True
             st.session_state[unique_key] = True
 
     st.session_state.mark_all_done = False
@@ -210,7 +204,6 @@ if st.session_state.clear_all:
         for key in target_dict.keys():
             unique_key = widget_key_maker("cb", current_key, key)
             st.session_state["json_data"]["existing_lists"][current_key][sub_dict]["content_list"][key] = False
-            #st.session_state[f"cb_{current_key}_{sub_dict}_{key}"] = False
             st.session_state[unique_key] = False
 
     st.session_state.clear_all = False
@@ -268,9 +261,6 @@ if st.session_state.edit_button_input:
                     unique_cb_key_for_deletion = widget_key_maker("cb", current_key, item_name)
                     unique_edit_key = widget_key_maker("edit", current_key, item_name)
                     st.session_state[unique_cb_key] = old_value
-                    #st.session_state[f"cb_{current_key}_tier_0_list_{user_input}"] = old_value
-                    #del st.session_state[f"cb_{current_key}_tier_0_list_{item_name}"]
-                    #del st.session_state[f"{item_name}_edit_button"]
                     del st.session_state[unique_cb_key_for_deletion]
                     del st.session_state[unique_edit_key]
                     # now add the new key and value

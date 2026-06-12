@@ -25,6 +25,9 @@ def widget_key_maker(type: str, master_list_name: str, item_name: str):
     # create widget key in standardm form. types are "cb", "delete", "edit"
     return f"{type}_{master_list_name}_{item_name}"
 
+def update_state(item_name, item_key, target_list_dict):
+    target_list_dict[item_name] = st.session_state[item_key]
+
 def item_crosschecker(new_item: str, new_item_tier: int, check_dict: dict):
     # check against a dict that represents the [current_shown_list] of the master dict (dict of list_builder_dicts)
     # returns True if item already exists
