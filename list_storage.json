@@ -6,42 +6,45 @@
         "list_name": "New list",
         "list_tier": 0,
         "content_list": {
-          "down/jackets": true,
-          "water": true,
+          "down/jackets": false,
           "multipitch backpack": false,
-          "ropes": false
-        }
-      },
-      "Camping gear": {
-        "list_name": "Camping gear",
-        "list_tier": 1,
-        "content_list": {
-          "Flag": true,
-          "Tent": true,
-          "Bucket": false,
-          "Chair": false
+          "ropes": false,
+          "water": false
         }
       },
       "Sport climbing gear": {
         "list_name": "Sport climbing gear",
         "list_tier": 1,
         "content_list": {
-          "Quickdraws": true,
           "Grigri": false,
           "Harness": false,
+          "Quickdraws": false,
           "Rope": false
-        }
+        },
+        "expanded": false
+      },
+      "Camping gear": {
+        "list_name": "Camping gear",
+        "list_tier": 1,
+        "content_list": {
+          "Bucket": false,
+          "Chair": false,
+          "Flag": false,
+          "Tent": false
+        },
+        "expanded": true
       },
       "Trad gear": {
         "list_name": "Trad gear",
         "list_tier": 1,
         "content_list": {
-          "alpine draws": true,
-          "nut tool": true,
+          "alpine draws": false,
           "cams": false,
+          "nut tool": false,
           "nuts": false,
-          "trouser": true
-        }
+          "trouser": false
+        },
+        "expanded": false
       }
     }
   },

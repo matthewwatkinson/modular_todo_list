@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-# modules can now be summoned as lists
+# expander state saved across sessions
+# however, expanders expand/close on add, check/clear all (but not on delete, add_module)
 
 # learned a tough lesson that callbacks need separate args=
 
@@ -73,7 +74,15 @@ current_list_sorter()
 def current_list_modules_draw(module_key_list: dict):
     current_key = st.session_state["json_data"]["current_list"]
     for sublist in module_key_list:
-        with st.expander(sublist, key=f"expander_{sublist}"):
+        unique_expander_key = widget_key_maker("expander", sublist, "")
+        expanded = st.session_state["json_data"]["existing_lists"][current_key][sublist]["expanded"]
+        with st.expander(
+            sublist,
+            expanded=expanded,
+            key=unique_expander_key,
+            on_change=update_state,
+            args=("expanded", unique_expander_key, st.session_state["json_data"]["existing_lists"][current_key][sublist])
+        ):
             target_dict = st.session_state["json_data"]["existing_lists"][current_key][sublist]["content_list"]
             for item in target_dict:
                 unique_key = widget_key_maker("cb", current_key, item)
@@ -167,6 +176,7 @@ def module_to_list():
                 filtered_list.append(item)
         # pass this module through list_builder()
         module_as_dict = list_builder(module_to_list_key, filtered_list, 1)
+        module_as_dict["expanded"] = True
         # add the new dict into the current list's dictionary structure
         st.session_state["json_data"]["existing_lists"][current_key][module_to_list_key] = module_as_dict
 
@@ -270,7 +280,7 @@ if st.session_state.edit_button_input:
                     # and replace into session state
                     st.session_state["json_data"]["existing_lists"][current_key]["tier_0_list"]["content_list"] = content_dict
                     st.session_state.edit_button_input = False
-                    st.rerun()  # Instantly refreshes to show updated state
+                    st.rerun()
                 else:
                     # don't add it
                     st.warning("This item name already in use")
@@ -278,7 +288,7 @@ if st.session_state.edit_button_input:
                 st.warning("Blank items are not permitted")
         if cancel_button:
             st.session_state.edit_button_input = False
-            st.rerun()  # Instantly refreshes to show updated state
+            st.rerun()
   
 master_sub_list_sort_launch()
 
