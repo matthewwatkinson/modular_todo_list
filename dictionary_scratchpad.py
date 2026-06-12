@@ -21,6 +21,10 @@ def list_builder(name: str, content_list=[], tier=0):
 
     return list_container
 
+def widget_key_maker(type: str, master_list_name: str, item_name: str):
+    # create widget key in standardm form. types are "cb", "delete", "edit"
+    return f"{type}_{master_list_name}_{item_name}"
+
 def item_crosschecker(new_item: str, new_item_tier: int, check_dict: dict):
     # check against a dict that represents the [current_shown_list] of the master dict (dict of list_builder_dicts)
     # returns True if item already exists

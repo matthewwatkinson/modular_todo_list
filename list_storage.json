@@ -6,10 +6,10 @@
         "list_name": "New list",
         "list_tier": 0,
         "content_list": {
+          "down/jackets": true,
           "ropes": true,
-          "down/jackets": false,
-          "multipitch backpack": false,
-          "water bottle": false
+          "water": false,
+          "multipitch backpack": false
         }
       },
       "Camping gear": {
