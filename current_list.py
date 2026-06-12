@@ -1,17 +1,10 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-# expander state saved across sessions
-# however, expanders expand/close on add, check/clear all (but not on delete, add_module)
-
 # learned a tough lesson that callbacks need separate args=
 
-# need to sort module lists on check etc
-# need to update cb -> list items for module lists
-
-# need to make a formulaic way to define widget keys, especially as multiple lists become a thing
-
 # need to be able to rename lists
+# name crosschecker should be case insensitive
 
 # tier_0_list hardcoding in edit section needs to be fixed (master_sub_list... can help)
 
@@ -33,7 +26,6 @@ def current_list_sorter():
 
 json_dictionary = data_load()
 
-
 #but only use json if we don't have a session state
 if "json_data" not in st.session_state:
     st.session_state["json_data"] = json_dictionary
@@ -53,6 +45,8 @@ if "json_data" not in st.session_state:
 else:
     # otherwise we need to save the latest state to json
     data_save()
+
+current_key = st.session_state["json_data"]["current_list"]
 
 if "edit_button_input" not in st.session_state:
     st.session_state.edit_button_input = False
@@ -186,6 +180,7 @@ with control_button_container:
     mark_all_done_button = st.button("mark all done", key="mark_all_done_button")
     clear_all_button = st.button("clear all", key="clear_all_button")
     navigate_to_modules_button = st.button("modules (TEMP)", key="current_list_to_modules_button")
+    navigate_to_lists_button = st.button("⬅", key="current_list_to_lists_menu_button")
     if new_item_button:
         st.session_state.add_button_input = True
     if mark_all_done_button:
@@ -194,6 +189,8 @@ with control_button_container:
         st.session_state.clear_all = True
     if navigate_to_modules_button:
         st.switch_page("module_summary_menu.py")
+    if navigate_to_lists_button:
+        st.switch_page("list_summary_menu.py")
 
 if st.session_state.mark_all_done:
     current_key = st.session_state["json_data"]["current_list"]
@@ -290,6 +287,7 @@ if st.session_state.edit_button_input:
             st.session_state.edit_button_input = False
             st.rerun()
   
+st.write(current_key)  
 master_sub_list_sort_launch()
 
 if st.button("add module"):

@@ -7,25 +7,11 @@ import streamlit as st
 import json
 from dictionary_scratchpad import *
 
-# no JSON loading should be necessary in final form, should be handled on startup in list script
-
-# json_dictionary = data_load()
-
-# #but only use json if we don't have a session state
-# if "json_data" not in st.session_state:
-#     st.session_state["json_data"] = json_dictionary
-# else:
-#     # otherwise we need to save the latest state to json
-#     data_save()
-
-
-if "module_edit_button_input" not in st.session_state:
-    st.session_state.module_edit_button_input = False
+#if "module_edit_button_input" not in st.session_state:
+#   st.session_state.module_edit_button_input = False
 
 if "new_module_button_input" not in st.session_state:
     st.session_state.new_module_button_input = False
-
-
 
 def module_list_sorter():
     module_list_to_sort = st.session_state["json_data"]["modules"]
