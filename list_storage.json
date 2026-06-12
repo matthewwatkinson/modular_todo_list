@@ -13,6 +13,16 @@
           "water": false
         }
       },
+      "Camping gear": {
+        "list_name": "Camping gear",
+        "list_tier": 1,
+        "content_list": {
+          "Bucket": false,
+          "Chair": false,
+          "Flag": false,
+          "Tent": false
+        }
+      },
       "Sport climbing gear": {
         "list_name": "Sport climbing gear",
         "list_tier": 1,
@@ -30,7 +40,8 @@
           "alpine draws": false,
           "cams": false,
           "nut tool": false,
-          "nuts": false
+          "nuts": false,
+          "trouser": false
         }
       }
     }

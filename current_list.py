@@ -1,12 +1,13 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-# basic code for summoning modules is at bottom
-# next step is to add this summoned module as a list
-# need to study the dictionary format and expander logic
-# let's start without edit/delete options
-# when adding lists, will need to check if items already exist in any other existing list, else key errors will arise
-# think carefully again about where to delete dupe items depending on list seniority etc
+# modules can now be summoned as lists
+# need to maintain expander open/close state
+# need to sort module lists on check etc
+
+# need to make a formulaic way to define widget keys, especially as multiple lists become a thing
+
+# need to be able to rename lists
 
 
 import streamlit as st
@@ -62,16 +63,17 @@ if "module_add_key" not in st.session_state:
 
 current_list_sorter()
 
-def current_list_modules_draw(module_key_list):
+def current_list_modules_draw(module_key_list: dict):
     current_key = st.session_state["json_data"]["current_list"]
     for sublist in module_key_list:
-        with st.expander(sublist):
+        with st.expander(sublist, key=f"expander_{sublist}"):
             for item in st.session_state["json_data"]["existing_lists"][current_key][sublist]["content_list"]:
                 st.checkbox(
                 label=item,
                 # make the key completely unique: list/sublist/item
                 key=f"cb_{current_key}_{sublist}_{item}"
                 )
+
 
 def current_list_draw(current_list_master):
     current_key = st.session_state["json_data"]["current_list"]
@@ -137,20 +139,24 @@ def master_sub_list_sort_launch():
     current_list_modules_draw(sub_lists)
 
 def module_to_list():
+    current_key = st.session_state["json_data"]["current_list"]
     # use selectbox key to identify module
     module_to_list_key = st.session_state.module_add_key
-    # get a list of items and check whether already in list
-    filtered_list = []
-    unfiltered_list = st.session_state["json_data"]["modules"][module_to_list_key]
-    current_key = st.session_state["json_data"]["current_list"]
-    check_subject = st.session_state["json_data"]["existing_lists"][current_key]
-    for item in unfiltered_list:
-        if not item_crosschecker(item, 1, check_subject):
-            filtered_list.append(item)
-    # pass this module through list_builder()
-    module_as_dict = list_builder(module_to_list_key, filtered_list, 1)
-    # add the new dict into the current list's dictionary structure
-    st.session_state["json_data"]["existing_lists"][current_key][module_to_list_key] = module_as_dict
+    # have we already imported this module?
+    if module_to_list_key in st.session_state["json_data"]["existing_lists"][current_key]:
+        st.warning("You have already added this module")
+    else:
+        # get a list of items and check whether already in list
+        filtered_list = []
+        unfiltered_list = st.session_state["json_data"]["modules"][module_to_list_key]
+        check_subject = st.session_state["json_data"]["existing_lists"][current_key]
+        for item in unfiltered_list:
+            if not item_crosschecker(item, 1, check_subject):
+                filtered_list.append(item)
+        # pass this module through list_builder()
+        module_as_dict = list_builder(module_to_list_key, filtered_list, 1)
+        # add the new dict into the current list's dictionary structure
+        st.session_state["json_data"]["existing_lists"][current_key][module_to_list_key] = module_as_dict
 
 control_button_container = st.container(horizontal=True)
 with control_button_container:
@@ -256,11 +262,6 @@ if st.session_state.edit_button_input:
             st.rerun()  # Instantly refreshes to show updated state
   
 master_sub_list_sort_launch()
-
-if st.session_state.module_add_key:
-    with st.expander(st.session_state.module_add_key):
-        for item in st.session_state["json_data"]["modules"][st.session_state.module_add_key]:
-            st.write(item)
 
 if st.button("add module"):
     # get the list for selection box
