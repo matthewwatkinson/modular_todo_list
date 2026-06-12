@@ -57,10 +57,10 @@
         "list_name": "Gym bouldering",
         "list_tier": 1,
         "content_list": {
-          "Skincare kit": true,
+          "Gym membership card": true,
           "Chalk and brush": false,
           "Climbing shoes": false,
-          "Gym membership card": false,
+          "Skincare kit": false,
           "Snacks": false,
           "Warmup gear": false,
           "Water bottle": false
@@ -71,9 +71,9 @@
         "list_name": "Lyra lead climbing",
         "list_tier": 1,
         "content_list": {
-          "Grigri": true,
+          "Lyra harness": true,
+          "Grigri": false,
           "Lyra climbing shoes": false,
-          "Lyra harness": false,
           "PJCC t-shirt": false
         },
         "expanded": true
