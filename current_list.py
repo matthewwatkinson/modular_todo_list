@@ -1,10 +1,13 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-# learned a tough lesson that callbacks need separate args=
+
+# solved, now expand to main list as well as module lists
 
 # need to be able to rename lists
 # name crosschecker should be case insensitive
+# would like a green tick or whatever in expander header if all items checked
+# if we are always calling tier 0 list tier_0_list then master_sub_sort is maybe redundant?
 
 # tier_0_list hardcoding in edit section needs to be fixed (master_sub_list... can help)
 
@@ -79,7 +82,9 @@ def current_list_modules_draw(module_key_list: dict):
         ):
             target_dict = st.session_state["json_data"]["existing_lists"][current_key][sublist]["content_list"]
             for item in target_dict:
+                cb_val = st.session_state["json_data"]["existing_lists"][current_key][sublist]["content_list"][item]
                 unique_key = widget_key_maker("cb", current_key, item)
+                st.session_state[unique_key] = cb_val
                 st.checkbox(
                 label=item,
                 key=unique_key,
@@ -118,7 +123,9 @@ def current_list_draw(current_list_master):
         
         col1, col2, col3 =st.columns([10, 1, 1])
         with col1:
+            cb_val = st.session_state["json_data"]["existing_lists"][current_key][current_list_master]["content_list"][item]
             unique_key = widget_key_maker("cb", current_key, item)
+            st.session_state[unique_key] = cb_val
             st.checkbox(
                 label=item,
                 key=unique_key,
@@ -286,8 +293,7 @@ if st.session_state.edit_button_input:
         if cancel_button:
             st.session_state.edit_button_input = False
             st.rerun()
-  
-st.write(current_key)  
+ 
 master_sub_list_sort_launch()
 
 if st.button("add module"):
