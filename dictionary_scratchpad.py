@@ -34,7 +34,7 @@ def item_crosschecker(new_item: str, new_item_tier: int, check_dict: dict):
     cancel_insert = False
     for sub_dict in check_dict:
         for key in list(check_dict[sub_dict]["content_list"].keys()):
-            if key == new_item:
+            if key.lower() == new_item.lower():
                 # compare tiers
                 #check_tier = check_dict[sub_dict]["list_tier"]
                 #if new_item_tier < check_tier:
