@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-
-# solved, now expand to main list as well as module lists
+# 
 
 # need to be able to rename lists
-# name crosschecker should be case insensitive
+
+# clean up old functions, current_list etc etc
+
 # would like a green tick or whatever in expander header if all items checked
 # if we are always calling tier 0 list tier_0_list then master_sub_sort is maybe redundant?
 
@@ -16,6 +17,35 @@ import streamlit as st
 import json
 #from helper import *
 from dictionary_scratchpad import *
+
+smaller_button_css = """
+<style>
+button[data-testid="stBaseButton-secondary"] {
+    min-height: 0.25rem;
+    padding-top: 0rem;
+    padding-bottom: 0rem;
+}
+</style>
+"""
+
+#st.markdown(smaller_button_css, unsafe_allow_html=True)
+
+st.markdown(
+    """
+    <style>
+    [data-testid="stHorizontalBlock"] {
+        display: flex !important;
+        flex-direction: row !important;
+        flex-wrap: nowrap !important;
+        overflow-x: auto; /* Adds a scrollbar if content is too wide */
+    }
+    [data-testid="stHorizontalBlock"] > div {
+        min-width: 0 !important; /* Prevents columns from expanding and cracking layout */
+    }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
 
 def current_list_sorter():
     current_key = st.session_state["json_data"]["current_list"]
@@ -121,7 +151,7 @@ def current_list_draw(current_list_master):
             st.session_state.edit_button_input = True
             st.session_state["item_to_be_edited"] = name
         
-        col1, col2, col3 =st.columns([10, 1, 1])
+        col1, col2, col3 =st.columns([6, 1, 1])
         with col1:
             cb_val = st.session_state["json_data"]["existing_lists"][current_key][current_list_master]["content_list"][item]
             unique_key = widget_key_maker("cb", current_key, item)
@@ -183,13 +213,13 @@ def module_to_list():
 
 control_button_container = st.container(horizontal=True)
 with control_button_container:
-    new_item_button =  st.button("➕", key="new_item_button")
-    mark_all_done_button = st.button("mark all done", key="mark_all_done_button")
+#    new_item_button =  st.button("➕", key="new_item_button")
+    mark_all_done_button = st.button("✔ all", key="mark_all_done_button")
     clear_all_button = st.button("clear all", key="clear_all_button")
     navigate_to_modules_button = st.button("modules (TEMP)", key="current_list_to_modules_button")
     navigate_to_lists_button = st.button("⬅", key="current_list_to_lists_menu_button")
-    if new_item_button:
-        st.session_state.add_button_input = True
+#    if new_item_button:
+#        st.session_state.add_button_input = True
     if mark_all_done_button:
         st.session_state.mark_all_done = True
     if clear_all_button:
@@ -224,31 +254,31 @@ if st.session_state.clear_all:
     st.rerun()
 
 
-if st.session_state.add_button_input:
-    with st.form(key="new_item_input"):
-        user_input = st.text_input("Add an item:")
-        form_button_container = st.container(horizontal=True) 
-        with form_button_container:
-            submit_button = st.form_submit_button(label="Add", type="primary")
-            cancel_button = st.form_submit_button(label="Cancel")
+# if st.session_state.add_button_input:
+#     with st.form(key="new_item_input"):
+#         user_input = st.text_input("Add an item:")
+#         form_button_container = st.container(horizontal=True) 
+#         with form_button_container:
+#             submit_button = st.form_submit_button(label="Add", type="primary")
+#             cancel_button = st.form_submit_button(label="Cancel")
 
-        if submit_button:
-            if user_input:
-                # test to see if it already exists in any sub_dicts
-                current_key = st.session_state["json_data"]["current_list"]
-                if not item_crosschecker(user_input, 0, st.session_state["json_data"]["existing_lists"][current_key]):
-                    # add it
-                    st.session_state["json_data"]["existing_lists"][current_key]["tier_0_list"]["content_list"][user_input] = False
-                    st.session_state.add_button_input = False
-                    st.rerun()  # Instantly refreshes to show updated state
-                else:
-                    # don't add it
-                    st.warning("Item already exists")
-            else:
-                st.warning("Please enter some text before submitting.")
-        if cancel_button:
-            st.session_state.add_button_input = False
-            st.rerun()  # Instantly refreshes to show updated state
+#         if submit_button:
+#             if user_input:
+#                 # test to see if it already exists in any sub_dicts
+#                 current_key = st.session_state["json_data"]["current_list"]
+#                 if not item_crosschecker(user_input, 0, st.session_state["json_data"]["existing_lists"][current_key]):
+#                     # add it
+#                     st.session_state["json_data"]["existing_lists"][current_key]["tier_0_list"]["content_list"][user_input] = False
+#                     st.session_state.add_button_input = False
+#                     st.rerun()  # Instantly refreshes to show updated state
+#                 else:
+#                     # don't add it
+#                     st.warning("Item already exists")
+#             else:
+#                 st.warning("Please enter some text before submitting.")
+#         if cancel_button:
+#             st.session_state.add_button_input = False
+#             st.rerun()  # Instantly refreshes to show updated state
 
 if st.session_state.edit_button_input:
     # retrieve item to be edited
@@ -293,7 +323,25 @@ if st.session_state.edit_button_input:
         if cancel_button:
             st.session_state.edit_button_input = False
             st.rerun()
- 
+
+with st.container():
+    def add_new_item_func():
+        new_name = st.session_state.add_new_item_text
+        #logic for empty string, dupe item etc
+        if new_name:
+            # test to see if it already exists in any sub_dicts
+            current_key = st.session_state["json_data"]["current_list"]
+            if not item_crosschecker(new_name, 0, st.session_state["json_data"]["existing_lists"][current_key]):
+                # add it
+                st.session_state["json_data"]["existing_lists"][current_key]["tier_0_list"]["content_list"][new_name] = False
+                st.session_state.add_new_item_text = ""
+            else:
+                # don't add it
+                st.warning("Item with this name already exists")
+
+
+    add_new_item = st.text_input(label=" ", placeholder="add new list item here", on_change=add_new_item_func, key="add_new_item_text")
+
 master_sub_list_sort_launch()
 
 if st.button("add module"):

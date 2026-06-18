@@ -7,6 +7,35 @@ import streamlit as st
 import json
 from dictionary_scratchpad import *
 
+smaller_button_css = """
+<style>
+button[data-testid="stBaseButton-secondary"] {
+    min-height: 0.25rem;
+    padding-top: 0rem;
+    padding-bottom: 0rem;
+}
+</style>
+"""
+
+st.markdown(smaller_button_css, unsafe_allow_html=True)
+
+st.markdown(
+    """
+    <style>
+    [data-testid="stHorizontalBlock"] {
+        display: flex !important;
+        flex-direction: row !important;
+        flex-wrap: nowrap !important;
+        overflow-x: auto; /* Adds a scrollbar if content is too wide */
+    }
+    [data-testid="stHorizontalBlock"] > div {
+        min-width: 0 !important; /* Prevents columns from expanding and cracking layout */
+    }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
+
 #if "module_edit_button_input" not in st.session_state:
 #   st.session_state.module_edit_button_input = False
 
@@ -37,7 +66,8 @@ def module_list_draw():
             del st.session_state["json_data"]["modules"][name]
             del st.session_state[f"{name}_delete_button"]
     
-        col1, col2, col3, col4 =st.columns([8, 2, 1, 1])
+#        with st.container(border=True, horizontal=True):
+        col1, col2, col3, col4 =st.columns([3, 2, 1, 1])
 
         with col1:
             st.write(f"{key}")
@@ -46,8 +76,9 @@ def module_list_draw():
             st.write(f"({len(st.session_state["json_data"]["modules"][key])} items)")
 
         with col3:
-             if st.button(
-                label="✏️",
+            if st.button(
+                #label="✏️",
+                label="e",
                 key=f"{key}_edit_button",
             ):
                 # record the module to be edited
@@ -57,7 +88,8 @@ def module_list_draw():
 
         with col4:
             st.button(
-                label="🗑️",
+                #label="🗑️",
+                label="d",
                 key=f"{key}_delete_button",
                 on_click=delete_confirm
             )

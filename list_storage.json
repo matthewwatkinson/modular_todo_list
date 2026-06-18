@@ -1,5 +1,5 @@
 {
-  "current_list": "New list",
+  "current_list": "Pump2 with Lyra",
   "existing_lists": {
     "New list": {
       "tier_0_list": {
@@ -21,7 +21,7 @@
           "Quickdraws": false,
           "Rope": false
         },
-        "expanded": true
+        "expanded": false
       },
       "Camping gear": {
         "list_name": "Camping gear",
@@ -52,20 +52,23 @@
         "list_name": "Pump2 with Lyra",
         "list_tier": 0,
         "content_list": {
-          "Crocs": false
+          "Crocs": false,
+          "a different item": false,
+          "a new item": false,
+          "another new item": false
         }
       },
       "Gym bouldering": {
         "list_name": "Gym bouldering",
         "list_tier": 1,
         "content_list": {
-          "Chalk and brush": true,
-          "Climbing shoes": true,
-          "Gym membership card": true,
-          "Skincare kit": true,
-          "Snacks": true,
-          "Water bottle": true,
-          "Warmup gear": false
+          "Chalk and brush": false,
+          "Climbing shoes": false,
+          "Gym membership card": false,
+          "Skincare kit": false,
+          "Snacks": false,
+          "Warmup gear": false,
+          "Water bottle": false
         },
         "expanded": true
       },
@@ -73,10 +76,45 @@
         "list_name": "Lyra lead climbing",
         "list_tier": 1,
         "content_list": {
-          "Grigri": true,
           "Lyra climbing shoes": true,
           "Lyra harness": true,
-          "PJCC t-shirt": true
+          "Grigri": false,
+          "PJCC t-shirt": false
+        },
+        "expanded": true
+      }
+    },
+    "Test1": {
+      "tier_0_list": {
+        "list_name": "Test1",
+        "list_tier": 0,
+        "content_list": {
+          "Test item": true
+        }
+      },
+      "Lyra lead climbing": {
+        "list_name": "Lyra lead climbing",
+        "list_tier": 1,
+        "content_list": {
+          "Grigri": true,
+          "Gym membership card": true,
+          "Harness": true,
+          "Lyra climbing shoes": true,
+          "Lyra harness": true,
+          "PJCC t-shirt": true,
+          "Snacks": true,
+          "Water bottle": true
+        },
+        "expanded": true
+      },
+      "Gym bouldering": {
+        "list_name": "Gym bouldering",
+        "list_tier": 1,
+        "content_list": {
+          "Chalk and brush": true,
+          "Climbing shoes": true,
+          "Skincare kit": true,
+          "Warmup gear": true
         },
         "expanded": true
       }
