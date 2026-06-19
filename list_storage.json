@@ -45,6 +45,14 @@
           "trouser": false
         },
         "expanded": false
+      },
+      "blah": {
+        "list_name": "blah",
+        "list_tier": 1,
+        "content_list": {
+          "thing": false
+        },
+        "expanded": false
       }
     },
     "Pump2 with Lyra": {
@@ -52,8 +60,8 @@
         "list_name": "Pump2 with Lyra",
         "list_tier": 0,
         "content_list": {
+          "a different item": true,
           "Crocs": false,
-          "a different item": false,
           "a new item": false,
           "another new item": false
         }
@@ -62,9 +70,9 @@
         "list_name": "Gym bouldering",
         "list_tier": 1,
         "content_list": {
+          "Gym membership card": true,
           "Chalk and brush": false,
           "Climbing shoes": false,
-          "Gym membership card": false,
           "Skincare kit": false,
           "Snacks": false,
           "Warmup gear": false,
@@ -118,6 +126,16 @@
         },
         "expanded": true
       }
+    },
+    "Lunch": {
+      "tier_0_list": {
+        "list_name": "Lunch",
+        "list_tier": 0,
+        "content_list": {
+          "Fruit": false,
+          "Sandwich": false
+        }
+      }
     }
   },
   "modules": {
@@ -152,6 +170,9 @@
       "PJCC t-shirt",
       "Snacks",
       "Water bottle"
+    ],
+    "new mopd": [
+      "new item again"
     ]
   }
 }

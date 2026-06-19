@@ -8,12 +8,42 @@ import json
 #from helper import *
 from dictionary_scratchpad import *
 
+data_save()
+
 # no update/deletion of "current_list" key, want to preserve across sessions
 
-if "new_list_button_input" not in st.session_state:
-    st.session_state.new_list_button_input = False
+if "new_list_page_jump" not in st.session_state:
+    st.session_state.new_list_page_jump = False
+
+if st.session_state.new_list_page_jump:
+    st.session_state.new_list_page_jump = False
+    st.switch_page("current_list.py")
 
 st.title("My Lists")
+
+with st.container():
+    def add_new_list_func():
+        new_name = st.session_state.add_new_list_text
+        #logic for empty string, dupe item etc
+        if new_name:
+            # test to see if it already exists in any sub_dicts
+            if new_name.casefold() not in (list_name.casefold() for list_name in st.session_state["json_data"]["existing_lists"]):
+                # add it as an empty dict, make it the current_list, and reset input key
+                st.session_state["json_data"]["existing_lists"][new_name]= {}
+                st.session_state["json_data"]["existing_lists"][new_name]["tier_0_list"] = list_builder(new_name, [], 0)
+                st.session_state["json_data"]["current_list"] = new_name
+                st.session_state.add_new_list_text = ""
+                # set the page jumper
+                st.session_state.new_list_page_jump = True
+
+            else:
+                # don't add it
+                st.warning("List with this name already exists")
+#        else:
+#               st.warning("Please enter some text before submitting.")
+
+    add_new_list = st.text_input(label=" ", placeholder="add new list here", on_change=add_new_list_func, key="add_new_list_text")
+
 
 def lists_list_sorter_alph():
     # this sorts alphabetically. But may prefer just to move most recently changed to top for recency sort
@@ -61,44 +91,6 @@ def lists_list_draw():
                 key=f"{key}_list_delete_button",
                 on_click=delete_confirm
             )
-
-
-
-new_list_button =  st.button("➕", key="new_list_button")  
-
-if new_list_button:
-    # trigger popup with new list name input. check if it exists, then switch page
-    st.session_state.new_list_button_input = True
-
-if st.session_state.new_list_button_input:
-    with st.form(key="new_list_name_input"):
-        user_input = st.text_input("Input name for new list")
-        form_button_container = st.container(horizontal=True) 
-        with form_button_container:
-            submit_button = st.form_submit_button(label="Confirm", type="primary")
-            cancel_button = st.form_submit_button(label="Cancel")
-
-        if submit_button:
-            if user_input:
-                # test to see if a list with this name exists
-                if user_input not in st.session_state["json_data"]["existing_lists"]:
-                    # add it as an empty dict, make it the current_list, and reset input key
-                    st.session_state["json_data"]["existing_lists"][user_input]= {}
-                    st.session_state["json_data"]["existing_lists"][user_input]["tier_0_list"] = list_builder(user_input, [], 0)
-                    st.session_state["json_data"]["current_list"] = user_input
-                    st.session_state.new_list_button_input = False
-                    # jump to edit page
-                    st.switch_page("current_list.py")
-
-                else:
-                    # don't add it
-                    st.warning("List with this name already exists")
-            else:
-                st.warning("Please enter some text before submitting.")
-        if cancel_button:
-            st.session_state.new_list_button_input = False
-            st.rerun()
-
 
 
 lists_list_draw()

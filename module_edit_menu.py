@@ -50,41 +50,59 @@ if st.session_state.module_item_edit_button_input:
             st.session_state.module_item_edit_button_input = False
             st.rerun()  # Instantly refreshes to show updated state
 
+st.title(f"Edit {module_key}")
+
+with st.container():
+    def add_new_item_func():
+        new_name = st.session_state.add_new_module_item_text
+        #logic for empty string, dupe item etc
+        if new_name:
+            # test to see if it already exists in any sub_dicts
+            if new_name.casefold() not in (module_item.casefold() for module_item in module_contents):
+                # add it
+                module_contents.append(new_name)
+                st.session_state["json_data"]["modules"][module_key] = module_contents
+                st.session_state.add_new_module_item_text = ""
+
+            else:
+                # don't add it
+                st.warning("Item with this name already exists")
+
+
+    add_new_module_item = st.text_input(label=" ", placeholder="add new module item here", on_change=add_new_item_func, key="add_new_module_item_text")
 
 module_edit_list_sorter(module_key)
 
-st.title(f"Edit {module_key}")
+# module_new_item_button =  st.button("➕", key="module_new_item_button")
 
-module_new_item_button =  st.button("➕", key="module_new_item_button")
+# if module_new_item_button:
+#         st.session_state.module_item_add_button_input = True
 
-if module_new_item_button:
-        st.session_state.module_item_add_button_input = True
+# if st.session_state.module_item_add_button_input:
+#     with st.form(key="new_module_item_input"):
+#         user_input = st.text_input("Add an item:")
+#         form_button_container = st.container(horizontal=True) 
+#         with form_button_container:
+#             submit_button = st.form_submit_button(label="Add", type="primary")
+#             cancel_button = st.form_submit_button(label="Cancel")
 
-if st.session_state.module_item_add_button_input:
-    with st.form(key="new_module_item_input"):
-        user_input = st.text_input("Add an item:")
-        form_button_container = st.container(horizontal=True) 
-        with form_button_container:
-            submit_button = st.form_submit_button(label="Add", type="primary")
-            cancel_button = st.form_submit_button(label="Cancel")
-
-        if submit_button:
-            if user_input:
-                # test to see if it already exists in any sub_dicts
-                if user_input not in module_contents:
-                    # add it and reset input key
-                    module_contents.append(user_input)
-                    st.session_state["json_data"]["modules"][module_key] = module_contents
-                    st.session_state.module_item_add_button_input = False
-                    st.rerun()
-                else:
-                    # don't add it
-                    st.warning("Item already exists")
-            else:
-                st.warning("Please enter some text before submitting.")
-        if cancel_button:
-            st.session_state.module_item_add_button_input = False
-            st.rerun()
+#         if submit_button:
+#             if user_input:
+#                 # test to see if it already exists in any sub_dicts
+#                 if user_input not in module_contents:
+#                     # add it and reset input key
+#                     module_contents.append(user_input)
+#                     st.session_state["json_data"]["modules"][module_key] = module_contents
+#                     st.session_state.module_item_add_button_input = False
+#                     st.rerun()
+#                 else:
+#                     # don't add it
+#                     st.warning("Item already exists")
+#             else:
+#                 st.warning("Please enter some text before submitting.")
+#         if cancel_button:
+#             st.session_state.module_item_add_button_input = False
+#             st.rerun()
 
 module_edit_list_draw(module_key)
 

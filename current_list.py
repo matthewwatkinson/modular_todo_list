@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-# 
+# added inline text input for new list items
+# needs to be done for list, module menus too (3 screens)
 
 # need to be able to rename lists
 
@@ -253,32 +254,6 @@ if st.session_state.clear_all:
     st.session_state.clear_all = False
     st.rerun()
 
-
-# if st.session_state.add_button_input:
-#     with st.form(key="new_item_input"):
-#         user_input = st.text_input("Add an item:")
-#         form_button_container = st.container(horizontal=True) 
-#         with form_button_container:
-#             submit_button = st.form_submit_button(label="Add", type="primary")
-#             cancel_button = st.form_submit_button(label="Cancel")
-
-#         if submit_button:
-#             if user_input:
-#                 # test to see if it already exists in any sub_dicts
-#                 current_key = st.session_state["json_data"]["current_list"]
-#                 if not item_crosschecker(user_input, 0, st.session_state["json_data"]["existing_lists"][current_key]):
-#                     # add it
-#                     st.session_state["json_data"]["existing_lists"][current_key]["tier_0_list"]["content_list"][user_input] = False
-#                     st.session_state.add_button_input = False
-#                     st.rerun()  # Instantly refreshes to show updated state
-#                 else:
-#                     # don't add it
-#                     st.warning("Item already exists")
-#             else:
-#                 st.warning("Please enter some text before submitting.")
-#         if cancel_button:
-#             st.session_state.add_button_input = False
-#             st.rerun()  # Instantly refreshes to show updated state
 
 if st.session_state.edit_button_input:
     # retrieve item to be edited

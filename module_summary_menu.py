@@ -39,8 +39,14 @@ st.markdown(
 #if "module_edit_button_input" not in st.session_state:
 #   st.session_state.module_edit_button_input = False
 
-if "new_module_button_input" not in st.session_state:
-    st.session_state.new_module_button_input = False
+if "new_module_page_jump" not in st.session_state:
+    st.session_state.new_module_page_jump = False
+
+if st.session_state.new_module_page_jump:
+    st.session_state.new_module_page_jump = False
+    st.switch_page("module_edit_menu.py")
+
+
 
 def module_list_sorter():
     module_list_to_sort = st.session_state["json_data"]["modules"]
@@ -96,39 +102,27 @@ def module_list_draw():
 
 module_list_sorter()
 st.title("Modules")
-new_module_button =  st.button("➕", key="new_module_button")  
 
-if new_module_button:
-    # trigger popup with new module name input. check if it exists, then switch page
-    st.session_state.new_module_button_input = True
+with st.container():
+    def add_new_module_func():
+        new_name = st.session_state.add_new_module_text
+        #logic for empty string, dupe item etc
+        if new_name:
+            # test to see if it already exists in any sub_dicts
+            if new_name.casefold() not in (module_name.casefold() for module_name in st.session_state["json_data"]["modules"]):
+                # add it as an empty list and reset input key
+                st.session_state["json_data"]["modules"][new_name] = []
+                st.session_state.module_to_edit = new_name
 
-if st.session_state.new_module_button_input:
-    with st.form(key="new_module_input"):
-        user_input = st.text_input("Add a new module:")
-        form_button_container = st.container(horizontal=True) 
-        with form_button_container:
-            submit_button = st.form_submit_button(label="Add", type="primary")
-            cancel_button = st.form_submit_button(label="Cancel")
+                st.session_state.add_new_module_text = ""
+                # set the page jumper
+                st.session_state.new_module_page_jump = True
 
-        if submit_button:
-            if user_input:
-                # test to see if a module with this name exists
-                if user_input not in st.session_state["json_data"]["modules"]:
-                    # add it as an empty list and reset input key
-                    st.session_state["json_data"]["modules"][user_input] = []
-                    st.session_state.new_module_button_input = False
-                    # jump to edit page
-                    st.session_state.module_to_edit = user_input
-                    st.switch_page("module_edit_menu.py")
-
-                else:
-                    # don't add it
-                    st.warning("Module with this name already exists")
             else:
-                st.warning("Please enter some text before submitting.")
-        if cancel_button:
-            st.session_state.new_module_button_input = False
-            st.rerun()
+                # don't add it
+                st.warning("List with this name already exists")
+
+    add_new_module = st.text_input(label=" ", placeholder="add new module here", on_change=add_new_module_func, key="add_new_module_text")
 
 module_list_draw()
 
