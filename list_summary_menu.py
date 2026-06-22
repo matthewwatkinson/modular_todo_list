@@ -116,7 +116,8 @@ def lists_list_draw():
 
         with col2:
              if st.button(
-                label=":material/edit:",
+                label="",
+                icon=":material/edit:",
                 key=f"{key}_list_edit_button",
             ):
                 # make the selected list the current list
@@ -126,7 +127,8 @@ def lists_list_draw():
 
         with col3:
             st.button(
-                label=":material/delete:",
+                label="",
+                icon=":material/delete:",
                 key=f"{key}_list_delete_button",
                 on_click=delete_confirm
             )

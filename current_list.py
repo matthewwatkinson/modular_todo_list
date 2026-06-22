@@ -207,7 +207,8 @@ def current_list_draw(current_list_master):
             with col2:
                 unique_edit_key = widget_key_maker("edit", current_key, item)
                 st.button(
-                    label=":material/edit:",
+                    label="",
+                    icon=":material/edit:",
                     key=unique_edit_key,
                     on_click=edit_confirm
                 )
@@ -215,7 +216,8 @@ def current_list_draw(current_list_master):
             with col3:
                 unique_del_key = widget_key_maker("delete", current_key, item)
                 st.button(
-                    label=":material/delete:",
+                    label="",
+                    icon=":material/delete:",
                     key=unique_del_key,
                     on_click=delete_confirm
                 )
@@ -254,6 +256,8 @@ def module_to_list():
         module_as_dict["expanded"] = True
         # add the new dict into the current list's dictionary structure
         st.session_state["json_data"]["existing_lists"][current_key][module_to_list_key] = module_as_dict
+
+st.title("needs title logic")
 
 control_button_container = st.container(horizontal=True)
 with control_button_container:
@@ -357,15 +361,26 @@ with st.container():
                 # don't add it
                 st.warning("Item with this name already exists")
 
+    col1, col2 = st.columns([2,1], vertical_alignment='bottom')
+    with col1:
+        add_new_item = st.text_input(label=" ", placeholder="add new list item here", on_change=add_new_item_func, key="add_new_item_text")
 
-    add_new_item = st.text_input(label=" ", placeholder="add new list item here", on_change=add_new_item_func, key="add_new_item_text")
+    with col2:
+        if st.button("add module"):
+            # get the list for selection box
+            module_select_list = []
+            for module in st.session_state["json_data"]["modules"]:
+                module_select_list.append(module)
+            # select box
+            st.session_state.add_module_input = st.selectbox("hidden", options=module_select_list, index=None, placeholder="Select module to add", label_visibility="collapsed", key="module_add_key", on_change=module_to_list)
+
 
 master_sub_list_sort_launch()
 
-if st.button("add module"):
-    # get the list for selection box
-    module_select_list = []
-    for module in st.session_state["json_data"]["modules"]:
-        module_select_list.append(module)
-    # select box
-    st.session_state.add_module_input = st.selectbox("hidden", options=module_select_list, index=None, placeholder="Select module to add", label_visibility="collapsed", key="module_add_key", on_change=module_to_list)
+# if st.button("add module"):
+#     # get the list for selection box
+#     module_select_list = []
+#     for module in st.session_state["json_data"]["modules"]:
+#         module_select_list.append(module)
+#     # select box
+#     st.session_state.add_module_input = st.selectbox("hidden", options=module_select_list, index=None, placeholder="Select module to add", label_visibility="collapsed", key="module_add_key", on_change=module_to_list)

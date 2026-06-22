@@ -17,7 +17,7 @@
         "content_list": {
           "Spare rope": true
         },
-        "expanded": true
+        "expanded": false
       },
       "Lyra rope climbing": {
         "list_name": "Lyra rope climbing",
@@ -30,7 +30,7 @@
           "Lyra climbing shoes": false,
           "Lyra harness": false
         },
-        "expanded": true
+        "expanded": false
       }
     }
   },

@@ -105,7 +105,7 @@ def module_list_draw():
             del st.session_state[f"{name}_delete_button"]
     
 #        with st.container(border=True, horizontal=True):
-        col1, col2, col3, col4 =st.columns([3, 2, 1, 1])
+        col1, col2, col3, col4 =st.columns([3, 2, 1, 1], vertical_alignment="center")
 
         with col1:
             st.write(f"{key}")
@@ -115,7 +115,8 @@ def module_list_draw():
 
         with col3:
             if st.button(
-                label=":material/edit:",
+                label="",
+                icon=":material/edit:",
                 key=f"{key}_edit_button",
             ):
                 # record the module to be edited
@@ -125,7 +126,8 @@ def module_list_draw():
 
         with col4:
             st.button(
-                label=":material/delete:",
+                label="",
+                icon=":material/delete:",
                 key=f"{key}_delete_button",
                 on_click=delete_confirm
             )
