@@ -19,10 +19,22 @@ import json
 #from helper import *
 from dictionary_scratchpad import *
 
+# st.markdown(
+#     """
+#     <style>
+#         [data-testid="stCheckbox"] {
+#             margin-top: -7px; /* Adjust as needed */
+#             margin-bottom: -7px; /* Adjust as needed */
+#         }
+#     </style>
+#     """,
+#     unsafe_allow_html=True,
+# )
+
 smaller_button_css = """
 <style>
 button[data-testid="stBaseButton-secondary"] {
-    min-height: 0.25rem;
+    min-height: 0.1rem;
     padding-top: 0rem;
     padding-bottom: 0rem;
 }
@@ -30,6 +42,26 @@ button[data-testid="stBaseButton-secondary"] {
 """
 
 #st.markdown(smaller_button_css, unsafe_allow_html=True)
+
+st.markdown(
+    """
+    <style>
+    /* Reset the inner structural gap of the expander block */
+    [data-testid="stExpander"] [data-testid="stVerticalBlock"] {
+        gap: 0.5rem !important;
+    }
+
+    /* Precision margin adjustments specifically for checkboxes inside the expander columns */
+    [data-testid="stExpander"] [data-testid="column"] [data-testid="stCheckbox"] {
+        margin-top: -11px !important;    /* Pulls elements closer together vertically */
+        margin-bottom: -11px !important; 
+        padding-top: 0px !important;     /* Protects text descenders from clipping */
+        padding-bottom: 0px !important;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
 
 st.markdown(
     """
@@ -126,57 +158,68 @@ def current_list_modules_draw(module_key_list: dict):
 def current_list_draw(current_list_master):
     current_key = st.session_state["json_data"]["current_list"]
     target_dict = st.session_state["json_data"]["existing_lists"][current_key][current_list_master]["content_list"]
-    for item in target_dict.keys():
-        #def update_state(name, key):
-        #    st.session_state["json_data"]["existing_lists"][current_key][current_list_master]["content_list"][name] = st.session_state[key]
+    unique_expander_key = widget_key_maker("expander", current_key, current_list_master)
+    expanded = st.session_state["json_data"]["existing_lists"][current_key][current_list_master]["expanded"]
 
-        @st.dialog(title="Delete this item?", dismissible=False)
-        def delete_confirm(name=item):
-            col1, col2 = st.columns(2)
-            with col1:
-                if st.button("OK", type="primary", use_container_width=True):
-                    delete_update(name)
-                    st.rerun()
-            with col2:
-                if st.button("Cancel", use_container_width=True):
-                    st.rerun()
+    with st.expander(
+        "Unique items",
+        expanded=expanded,
+        key=unique_expander_key,
+        on_change=update_state,
+        args=("expanded", unique_expander_key, st.session_state["json_data"]["existing_lists"][current_key][current_list_master])
+    ):
+        for item in target_dict.keys():
+            #def update_state(name, key):
+            #    st.session_state["json_data"]["existing_lists"][current_key][current_list_master]["content_list"][name] = st.session_state[key]
 
-        def delete_update(name=item):
+            @st.dialog(title="Delete this item?", dismissible=False)
+            def delete_confirm(name=item):
+                col1, col2 = st.columns(2)
+                with col1:
+                    if st.button("OK", type="primary", use_container_width=True):
+                        delete_update(name)
+                        st.rerun()
+                with col2:
+                    if st.button("Cancel", use_container_width=True):
+                        st.rerun()
+
+            def delete_update(name=item):
+                
+                del st.session_state["json_data"]["existing_lists"][current_key][current_list_master]["content_list"][name]
+                del_key = widget_key_maker("delete", current_key, name)
+                del st.session_state[del_key]
             
-            del st.session_state["json_data"]["existing_lists"][current_key][current_list_master]["content_list"][name]
-            del_key = widget_key_maker("delete", current_key, name)
-            del st.session_state[del_key]
-        
-        def edit_confirm(name=item):
-            # trigger session_state, set the item key
-            st.session_state.edit_button_input = True
-            st.session_state["item_to_be_edited"] = name
-        
-        col1, col2, col3 =st.columns([6, 1, 1])
-        with col1:
-            cb_val = st.session_state["json_data"]["existing_lists"][current_key][current_list_master]["content_list"][item]
-            unique_key = widget_key_maker("cb", current_key, item)
-            st.session_state[unique_key] = cb_val
-            st.checkbox(
-                label=item,
-                key=unique_key,
-                on_change=update_state, args=(item, unique_key, target_dict)
-            )
-        with col2:
-            unique_edit_key = widget_key_maker("edit", current_key, item)
-            st.button(
-                label="✏️",
-                key=unique_edit_key,
-                on_click=edit_confirm
-            )
+            def edit_confirm(name=item):
+                # trigger session_state, set the item key
+                st.session_state.edit_button_input = True
+                st.session_state["item_to_be_edited"] = name
+            
+            col1, col2, col3 =st.columns([6, 1, 1])
+            with col1:
+                cb_val = st.session_state["json_data"]["existing_lists"][current_key][current_list_master]["content_list"][item]
+                unique_key = widget_key_maker("cb", current_key, item)
+                st.session_state[unique_key] = cb_val
+                st.checkbox(
+                    label=item,
+                    key=unique_key,
+                    on_change=update_state, args=(item, unique_key, target_dict)
+                )
+            with col2:
+                unique_edit_key = widget_key_maker("edit", current_key, item)
+                st.button(
+                    label=":material/edit:",
+                    key=unique_edit_key,
+                    on_click=edit_confirm
+                )
 
-        with col3:
-            unique_del_key = widget_key_maker("delete", current_key, item)
-            st.button(
-                label="🗑️",
-                key=unique_del_key,
-                on_click=delete_confirm
-            )
+            with col3:
+                unique_del_key = widget_key_maker("delete", current_key, item)
+                st.button(
+                    label=":material/delete:",
+                    key=unique_del_key,
+                    on_click=delete_confirm
+                )
+
 
 def master_sub_list_sort_launch():
     current_key = st.session_state["json_data"]["current_list"]

@@ -6,53 +6,8 @@
         "list_name": "New list",
         "list_tier": 0,
         "content_list": {
-          "multipitch backpack": true,
-          "ropes": true,
-          "down/jackets": false,
-          "water": false
+          "New item 1": false
         }
-      },
-      "Sport climbing gear": {
-        "list_name": "Sport climbing gear",
-        "list_tier": 1,
-        "content_list": {
-          "Grigri": true,
-          "Harness": false,
-          "Quickdraws": false,
-          "Rope": false
-        },
-        "expanded": false
-      },
-      "Camping gear": {
-        "list_name": "Camping gear",
-        "list_tier": 1,
-        "content_list": {
-          "Chair": true,
-          "Flag": true,
-          "Bucket": false,
-          "Tent": false
-        },
-        "expanded": true
-      },
-      "Trad gear": {
-        "list_name": "Trad gear",
-        "list_tier": 1,
-        "content_list": {
-          "alpine draws": false,
-          "cams": false,
-          "nut tool": false,
-          "nuts": false,
-          "trouser": false
-        },
-        "expanded": false
-      },
-      "blah": {
-        "list_name": "blah",
-        "list_tier": 1,
-        "content_list": {
-          "thing": false
-        },
-        "expanded": false
       }
     },
     "Pump2 with Lyra": {
@@ -60,119 +15,33 @@
         "list_name": "Pump2 with Lyra",
         "list_tier": 0,
         "content_list": {
-          "a different item": true,
-          "Crocs": false,
-          "a new item": false,
-          "another new item": false
-        }
-      },
-      "Gym bouldering": {
-        "list_name": "Gym bouldering",
-        "list_tier": 1,
-        "content_list": {
-          "Gym membership card": true,
-          "Chalk and brush": false,
-          "Climbing shoes": false,
-          "Skincare kit": false,
-          "Snacks": false,
-          "Warmup gear": false,
-          "Water bottle": false
+          "Spare rope": true
         },
         "expanded": true
       },
-      "Lyra lead climbing": {
-        "list_name": "Lyra lead climbing",
+      "Lyra rope climbing": {
+        "list_name": "Lyra rope climbing",
         "list_tier": 1,
         "content_list": {
-          "Lyra climbing shoes": true,
-          "Lyra harness": true,
+          "Gym membership card": true,
+          "Chalk": false,
           "Grigri": false,
-          "PJCC t-shirt": false
+          "Harness": false,
+          "Lyra climbing shoes": false,
+          "Lyra harness": false
         },
         "expanded": true
-      }
-    },
-    "Test1": {
-      "tier_0_list": {
-        "list_name": "Test1",
-        "list_tier": 0,
-        "content_list": {
-          "Test item": true
-        }
-      },
-      "Lyra lead climbing": {
-        "list_name": "Lyra lead climbing",
-        "list_tier": 1,
-        "content_list": {
-          "Grigri": true,
-          "Gym membership card": true,
-          "Harness": true,
-          "Lyra climbing shoes": true,
-          "Lyra harness": true,
-          "PJCC t-shirt": true,
-          "Snacks": true,
-          "Water bottle": true
-        },
-        "expanded": true
-      },
-      "Gym bouldering": {
-        "list_name": "Gym bouldering",
-        "list_tier": 1,
-        "content_list": {
-          "Chalk and brush": true,
-          "Climbing shoes": true,
-          "Skincare kit": true,
-          "Warmup gear": true
-        },
-        "expanded": true
-      }
-    },
-    "Lunch": {
-      "tier_0_list": {
-        "list_name": "Lunch",
-        "list_tier": 0,
-        "content_list": {
-          "Fruit": false,
-          "Sandwich": false
-        }
       }
     }
   },
   "modules": {
-    "Gym bouldering": [
-      "Chalk and brush",
-      "Climbing shoes",
-      "Gym membership card",
-      "Skincare kit",
-      "Snacks",
-      "Warmup gear",
-      "Water bottle"
-    ],
-    "Gym rope climbing": [
-      "Belay glasses",
-      "Chalk and brush",
-      "Climbing shoes",
-      "Grigri",
-      "Gym membership card",
-      "Harness",
-      "Rope",
-      "Skincare kit",
-      "Snacks",
-      "Warmup gear",
-      "Water"
-    ],
-    "Lyra lead climbing": [
+    "Lyra rope climbing": [
+      "Chalk",
       "Grigri",
       "Gym membership card",
       "Harness",
       "Lyra climbing shoes",
-      "Lyra harness",
-      "PJCC t-shirt",
-      "Snacks",
-      "Water bottle"
-    ],
-    "new mopd": [
-      "new item again"
+      "Lyra harness"
     ]
   }
 }

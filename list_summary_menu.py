@@ -8,7 +8,45 @@ import json
 #from helper import *
 from dictionary_scratchpad import *
 
-data_save()
+st.markdown(
+    """
+    <style>
+    [data-testid="stHorizontalBlock"] {
+        display: flex !important;
+        flex-direction: row !important;
+        flex-wrap: nowrap !important;
+        overflow-x: auto; /* Adds a scrollbar if content is too wide */
+    }
+    [data-testid="stHorizontalBlock"] > div {
+        min-width: 0 !important; /* Prevents columns from expanding and cracking layout */
+    }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
+
+json_dictionary = data_load()
+
+#but only use json if we don't have a session state
+if "json_data" not in st.session_state:
+    st.session_state["json_data"] = json_dictionary
+    # special case that this is first time to ever use app and there is no current list
+    if not current_and_populated():
+        # add a basic list
+        st.session_state["json_data"]["existing_lists"]["New list"] = {"tier_0_list": list_builder("New list", ["New item 1"], 0)}
+        st.session_state["json_data"]["current_list"] = "New list"
+    else:
+    # need to initialise the true/false state for each item in just the current list, if we have a current_list with items
+        current_key = st.session_state["json_data"]["current_list"]
+        for sub_dict in st.session_state["json_data"]["existing_lists"][current_key]:
+            for key, value in st.session_state["json_data"]["existing_lists"][current_key][sub_dict]["content_list"].items():
+                ref_key = widget_key_maker("cb", current_key, key)
+                st.session_state[ref_key] = value
+
+else:
+    # otherwise we need to save the latest state to json
+    data_save()
+
 
 # no update/deletion of "current_list" key, want to preserve across sessions
 
@@ -31,6 +69,7 @@ with st.container():
                 # add it as an empty dict, make it the current_list, and reset input key
                 st.session_state["json_data"]["existing_lists"][new_name]= {}
                 st.session_state["json_data"]["existing_lists"][new_name]["tier_0_list"] = list_builder(new_name, [], 0)
+                st.session_state["json_data"]["existing_lists"][new_name]["tier_0_list"]["expanded"] = False
                 st.session_state["json_data"]["current_list"] = new_name
                 st.session_state.add_new_list_text = ""
                 # set the page jumper
@@ -70,14 +109,14 @@ def lists_list_draw():
             del st.session_state["json_data"]["existing_lists"][name]
             del st.session_state[f"{name}_list_delete_button"]
     
-        col1, col2, col3 =st.columns([10, 1, 1])
+        col1, col2, col3 =st.columns([6, 1, 1])
 
         with col1:
             st.write(f"{key}")
 
         with col2:
              if st.button(
-                label="✏️",
+                label=":material/edit:",
                 key=f"{key}_list_edit_button",
             ):
                 # make the selected list the current list
@@ -87,7 +126,7 @@ def lists_list_draw():
 
         with col3:
             st.button(
-                label="🗑️",
+                label=":material/delete:",
                 key=f"{key}_list_delete_button",
                 on_click=delete_confirm
             )

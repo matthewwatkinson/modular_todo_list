@@ -8,11 +8,55 @@ import json
 #from helper import *
 from dictionary_scratchpad import *
 
+st.markdown(
+    """
+    <style>
+    [data-testid="stHorizontalBlock"] {
+        display: flex !important;
+        flex-direction: row !important;
+        flex-wrap: nowrap !important;
+        overflow-x: auto; /* Adds a scrollbar if content is too wide */
+    }
+    [data-testid="stHorizontalBlock"] > div {
+        min-width: 0 !important; /* Prevents columns from expanding and cracking layout */
+    }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
+
+json_dictionary = data_load()
+
+#but only use json if we don't have a session state
+if "json_data" not in st.session_state:
+    st.session_state["json_data"] = json_dictionary
+    # special case that this is first time to ever use app and there is no current list
+    if not current_and_populated():
+        # add a basic list
+        st.session_state["json_data"]["existing_lists"]["New list"] = {"tier_0_list": list_builder("New list", ["New item 1"], 0)}
+        st.session_state["json_data"]["current_list"] = "New list"
+    else:
+    # need to initialise the true/false state for each item in just the current list, if we have a current_list with items
+        current_key = st.session_state["json_data"]["current_list"]
+        for sub_dict in st.session_state["json_data"]["existing_lists"][current_key]:
+            for key, value in st.session_state["json_data"]["existing_lists"][current_key][sub_dict]["content_list"].items():
+                ref_key = widget_key_maker("cb", current_key, key)
+                st.session_state[ref_key] = value
+
+else:
+    # otherwise we need to save the latest state to json
+    data_save()
+
+
 if "module_item_edit_button_input" not in st.session_state:
     st.session_state.module_item_edit_button_input = False
 
 if "module_item_add_button_input" not in st.session_state:
     st.session_state.module_item_add_button_input = False
+
+if "module_to_edit" not in st.session_state:
+    st.session_state.module_to_edit = ""
+
 
 module_key = st.session_state.module_to_edit
 module_contents = st.session_state["json_data"]["modules"][module_key]
