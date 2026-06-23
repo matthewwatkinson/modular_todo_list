@@ -15,22 +15,22 @@
         "list_name": "Pump2 with Lyra",
         "list_tier": 0,
         "content_list": {
-          "Spare rope": true
+          "Spare rope": false
         },
-        "expanded": false
+        "expanded": true
       },
       "Lyra rope climbing": {
         "list_name": "Lyra rope climbing",
         "list_tier": 1,
         "content_list": {
-          "Gym membership card": true,
-          "Chalk": false,
-          "Grigri": false,
-          "Harness": false,
-          "Lyra climbing shoes": false,
-          "Lyra harness": false
+          "Chalk": true,
+          "Grigri": true,
+          "Harness": true,
+          "Lyra climbing shoes": true,
+          "Lyra harness": true,
+          "Gym membership card": false
         },
-        "expanded": false
+        "expanded": true
       }
     }
   },

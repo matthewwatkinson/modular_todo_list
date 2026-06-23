@@ -19,18 +19,6 @@ import json
 #from helper import *
 from dictionary_scratchpad import *
 
-# st.markdown(
-#     """
-#     <style>
-#         [data-testid="stCheckbox"] {
-#             margin-top: -7px; /* Adjust as needed */
-#             margin-bottom: -7px; /* Adjust as needed */
-#         }
-#     </style>
-#     """,
-#     unsafe_allow_html=True,
-# )
-
 smaller_button_css = """
 <style>
 button[data-testid="stBaseButton-secondary"] {
@@ -66,6 +54,17 @@ st.markdown(
 st.markdown(
     """
     <style>
+    section.stMain .block-container {
+        padding-top: 1rem;
+        padding-bottom: 0rem;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
+st.markdown(
+    """
+    <style>
     [data-testid="stHorizontalBlock"] {
         display: flex !important;
         flex-direction: row !important;
@@ -79,6 +78,13 @@ st.markdown(
     """,
     unsafe_allow_html=True
 )
+
+menu_format = """
+.st-key-top_menu_container {
+    background-color: rgba(100, 100, 200, 0.3);
+}
+"""
+st.html(f"<style>{menu_format}</style>")
 
 def current_list_sorter():
     current_key = st.session_state["json_data"]["current_list"]
@@ -257,25 +263,36 @@ def module_to_list():
         # add the new dict into the current list's dictionary structure
         st.session_state["json_data"]["existing_lists"][current_key][module_to_list_key] = module_as_dict
 
-st.title("needs title logic")
+with st.container(border=True, width="stretch", horizontal=True, key="top_menu_container"):
+    col1, col2 = st.columns(2)
+    with col1:
+        navigate_to_lists_button = st.button("lists", type="primary", width="stretch", key="current_list_to_lists_menu_button")
+    with col2:
+        navigate_to_modules_button = st.button("modules", type="secondary", width="stretch", key="current_list_to_modules_button")
+        if navigate_to_modules_button:
+            st.switch_page("module_summary_menu.py")
+        if navigate_to_lists_button:
+            st.switch_page("list_summary_menu.py")
+
+
 
 control_button_container = st.container(horizontal=True)
 with control_button_container:
-#    new_item_button =  st.button("➕", key="new_item_button")
-    mark_all_done_button = st.button("✔ all", key="mark_all_done_button")
-    clear_all_button = st.button("clear all", key="clear_all_button")
-    navigate_to_modules_button = st.button("modules (TEMP)", key="current_list_to_modules_button")
-    navigate_to_lists_button = st.button("⬅", key="current_list_to_lists_menu_button")
-#    if new_item_button:
-#        st.session_state.add_button_input = True
+    col1, col2, col3 =st.columns([4,1,1], gap="xxsmall")
+
+    # add list title
+    with col1:
+        st.write(f"#### {current_key}")
+    with col2:
+        mark_all_done_button = st.button("all", key="mark_all_done_button", width="stretch")
+    with col3:
+        clear_all_button = st.button("none", key="clear_all_button", width="stretch")
+
     if mark_all_done_button:
         st.session_state.mark_all_done = True
     if clear_all_button:
         st.session_state.clear_all = True
-    if navigate_to_modules_button:
-        st.switch_page("module_summary_menu.py")
-    if navigate_to_lists_button:
-        st.switch_page("list_summary_menu.py")
+
 
 if st.session_state.mark_all_done:
     current_key = st.session_state["json_data"]["current_list"]
@@ -346,7 +363,7 @@ if st.session_state.edit_button_input:
             st.session_state.edit_button_input = False
             st.rerun()
 
-with st.container():
+with st.container(width="stretch"):
     def add_new_item_func():
         new_name = st.session_state.add_new_item_text
         #logic for empty string, dupe item etc
@@ -366,7 +383,7 @@ with st.container():
         add_new_item = st.text_input(label=" ", placeholder="add new list item here", on_change=add_new_item_func, key="add_new_item_text")
 
     with col2:
-        if st.button("add module"):
+        if st.button("add module", width="stretch"):
             # get the list for selection box
             module_select_list = []
             for module in st.session_state["json_data"]["modules"]:
@@ -376,11 +393,3 @@ with st.container():
 
 
 master_sub_list_sort_launch()
-
-# if st.button("add module"):
-#     # get the list for selection box
-#     module_select_list = []
-#     for module in st.session_state["json_data"]["modules"]:
-#         module_select_list.append(module)
-#     # select box
-#     st.session_state.add_module_input = st.selectbox("hidden", options=module_select_list, index=None, placeholder="Select module to add", label_visibility="collapsed", key="module_add_key", on_change=module_to_list)

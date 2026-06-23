@@ -10,6 +10,7 @@ pg = st.navigation(
     st.Page("module_summary_menu.py"),
     st.Page("module_edit_menu.py"),
     st.Page("list_summary_menu.py")
-    ]
+    ],
+    position="hidden"
     )
 pg.run()

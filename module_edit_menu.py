@@ -94,6 +94,17 @@ if st.session_state.module_item_edit_button_input:
             st.session_state.module_item_edit_button_input = False
             st.rerun()  # Instantly refreshes to show updated state
 
+with st.container(border=True, width="stretch", horizontal=True, key="top_menu_container"):
+    col1, col2 = st.columns(2)
+    with col1:
+        navigate_to_lists_button = st.button("lists", type="primary", width="stretch", key="current_list_to_lists_menu_button")
+    with col2:
+        navigate_to_modules_button = st.button("modules", type="secondary", width="stretch", key="current_list_to_modules_button")
+        if navigate_to_modules_button:
+            st.switch_page("module_summary_menu.py")
+        if navigate_to_lists_button:
+            st.switch_page("list_summary_menu.py")
+            
 st.title(f"Edit {module_key}")
 
 with st.container():
