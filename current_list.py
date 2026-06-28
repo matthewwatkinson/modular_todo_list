@@ -1,8 +1,11 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-# added inline text input for new list items
-# needs to be done for list, module menus too (3 screens)
+# get rid of padding for top elements in turn
+# need to be able to delete modules
+
+# take all edit functions (edit title, add/remove module, save unique list as module to pop out accessed by single pencil button)
+# put new unique list item input inside expander if possible
 
 # need to be able to rename lists
 
@@ -22,7 +25,7 @@ from dictionary_scratchpad import *
 smaller_button_css = """
 <style>
 button[data-testid="stBaseButton-secondary"] {
-    min-height: 0.1rem;
+    min-height: 0.5rem;
     padding-top: 0rem;
     padding-bottom: 0rem;
 }
@@ -31,12 +34,47 @@ button[data-testid="stBaseButton-secondary"] {
 
 #st.markdown(smaller_button_css, unsafe_allow_html=True)
 
+hide_menu_style = """
+    <style>
+    #MainMenu {visibility: hidden;}
+    footer {visibility: hidden;}
+    .stDeployButton {display: none;}
+    </style>
+"""
+st.markdown(hide_menu_style, unsafe_allow_html=True)
+
+padding_css = """
+<style>
+[data-testid="stExpander"] details {
+    padding: 0px !important;
+}
+[data-testid="stExpander"] div[data-testid="stVerticalBlock"] {
+    gap: 0.1rem !important;  /* Adjust the gap between elements inside the expander */
+    padding-top: 0px !important;
+    padding-bottom: 0px !important;
+}
+</style>
+"""
+
+st.markdown(padding_css, unsafe_allow_html=True)
+
+container_padding_css = """
+<style>
+[data-testid="stContainer"] details {
+    padding: 50px !important;
+}
+</style>
+"""
+
+st.markdown(container_padding_css, unsafe_allow_html=True)
+
+
 st.markdown(
     """
     <style>
     /* Reset the inner structural gap of the expander block */
     [data-testid="stExpander"] [data-testid="stVerticalBlock"] {
-        gap: 0.5rem !important;
+        gap: 1.0rem !important;
     }
 
     /* Precision margin adjustments specifically for checkboxes inside the expander columns */
@@ -54,9 +92,22 @@ st.markdown(
 st.markdown(
     """
     <style>
-    section.stMain .block-container {
-        padding-top: 1rem;
+    [data-testid="stMain"] .block-container {
+        padding-top: 0rem;
         padding-bottom: 0rem;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
+
+#CSS just for the text input container in the unique list
+st.markdown(
+    """
+    <style>
+    /* Target the block wrapper containing your unique key class */
+    div[data-testid="stVerticalBlockBorderWrapper"]:has(.st-key-unique_list_text_input_container) {
+        padding-bottom: 1.0rem !important;
     }
     </style>
     """,
@@ -167,6 +218,20 @@ def current_list_draw(current_list_master):
     unique_expander_key = widget_key_maker("expander", current_key, current_list_master)
     expanded = st.session_state["json_data"]["existing_lists"][current_key][current_list_master]["expanded"]
 
+    def add_new_item_func():
+        new_name = st.session_state.add_new_item_text
+        #logic for empty string, dupe item etc
+        if new_name:
+            # test to see if it already exists in any sub_dicts
+            current_key = st.session_state["json_data"]["current_list"]
+            if not item_crosschecker(new_name, 0, st.session_state["json_data"]["existing_lists"][current_key]):
+                # add it
+                st.session_state["json_data"]["existing_lists"][current_key]["tier_0_list"]["content_list"][new_name] = False
+                st.session_state.add_new_item_text = ""
+            else:
+                # don't add it
+                st.warning("Item with this name already exists")
+
     with st.expander(
         "Unique items",
         expanded=expanded,
@@ -174,6 +239,9 @@ def current_list_draw(current_list_master):
         on_change=update_state,
         args=("expanded", unique_expander_key, st.session_state["json_data"]["existing_lists"][current_key][current_list_master])
     ):
+        with st.container(height=50, border=False):
+            st.text_input(label=" ", placeholder="add new list item here", on_change=add_new_item_func, key="add_new_item_text", label_visibility="collapsed")
+
         for item in target_dict.keys():
             #def update_state(name, key):
             #    st.session_state["json_data"]["existing_lists"][current_key][current_list_master]["content_list"][name] = st.session_state[key]
@@ -276,13 +344,13 @@ with st.container(border=True, width="stretch", horizontal=True, key="top_menu_c
 
 
 
-control_button_container = st.container(horizontal=True)
+control_button_container = st.container(horizontal=True, border=True)
 with control_button_container:
-    col1, col2, col3 =st.columns([4,1,1], gap="xxsmall")
+    col1, col2, col3 =st.columns([3,1,1], gap="xxsmall")
 
     # add list title
     with col1:
-        st.write(f"#### {current_key}")
+        st.write(f"##### {current_key}")
     with col2:
         mark_all_done_button = st.button("all", key="mark_all_done_button", width="stretch")
     with col3:
@@ -363,24 +431,24 @@ if st.session_state.edit_button_input:
             st.session_state.edit_button_input = False
             st.rerun()
 
-with st.container(width="stretch"):
-    def add_new_item_func():
-        new_name = st.session_state.add_new_item_text
-        #logic for empty string, dupe item etc
-        if new_name:
-            # test to see if it already exists in any sub_dicts
-            current_key = st.session_state["json_data"]["current_list"]
-            if not item_crosschecker(new_name, 0, st.session_state["json_data"]["existing_lists"][current_key]):
-                # add it
-                st.session_state["json_data"]["existing_lists"][current_key]["tier_0_list"]["content_list"][new_name] = False
-                st.session_state.add_new_item_text = ""
-            else:
-                # don't add it
-                st.warning("Item with this name already exists")
+with st.container(width="stretch", border=True, height=60, gap=None):
+    # def add_new_item_func():
+    #     new_name = st.session_state.add_new_item_text
+    #     #logic for empty string, dupe item etc
+    #     if new_name:
+    #         # test to see if it already exists in any sub_dicts
+    #         current_key = st.session_state["json_data"]["current_list"]
+    #         if not item_crosschecker(new_name, 0, st.session_state["json_data"]["existing_lists"][current_key]):
+    #             # add it
+    #             st.session_state["json_data"]["existing_lists"][current_key]["tier_0_list"]["content_list"][new_name] = False
+    #             st.session_state.add_new_item_text = ""
+    #         else:
+    #             # don't add it
+    #             st.warning("Item with this name already exists")
 
-    col1, col2 = st.columns([2,1], vertical_alignment='bottom')
-    with col1:
-        add_new_item = st.text_input(label=" ", placeholder="add new list item here", on_change=add_new_item_func, key="add_new_item_text")
+    col1, col2 = st.columns([2,1], vertical_alignment="bottom")
+    # with col1:
+    #     add_new_item = st.text_input(label=" ", placeholder="add new list item here", on_change=add_new_item_func, key="add_new_item_text")
 
     with col2:
         if st.button("add module", width="stretch"):
