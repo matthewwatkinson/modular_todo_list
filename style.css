@@ -1,3 +1,12 @@
+div[data-testid="stException"], 
+    div[class*="element-container"]:has(div[class*="stAlert"]) {
+        animation: fadeIn 0s 0.5s forwards;
+        visibility: hidden;
+    }
+    @keyframes fadeIn {
+        to { visibility: visible; }
+    }
+
 [data-testid="stExpander"] details {
     padding: 0px !important;
 }
