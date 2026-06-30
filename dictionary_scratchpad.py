@@ -11,6 +11,19 @@ baseline_json_dict = {
   "modules": {}
 }
 
+def page_header():
+    with st.container(border=False, width="stretch", horizontal=True, key="top_menu_container", gap=None):
+        col1, col2 = st.columns(2)
+        with col1:
+            navigate_to_lists_button = st.button("lists", type="primary", width="stretch", key="current_list_to_lists_menu_button")
+        with col2:
+            navigate_to_modules_button = st.button("modules", type="secondary", width="stretch", key="current_list_to_modules_button")
+            if navigate_to_modules_button:
+                st.switch_page("module_summary_menu.py")
+            if navigate_to_lists_button:
+                st.switch_page("list_summary_menu.py")
+
+
 def list_builder(name: str, content_list=[], tier=0):
     list_container = {}
     list_container["list_name"] = name
@@ -27,6 +40,15 @@ def widget_key_maker(type: str, master_list_name: str, item_name: str):
 
 def update_state(item_name, item_key, target_list_dict):
     target_list_dict[item_name] = st.session_state[item_key]
+
+def list_renamer(existing_name, new_name):
+    # make sure not empty input
+    if new_name:
+        #change it
+        copied_dict = st.session_state["json_data"]["existing_lists"][existing_name]
+        st.session_state["json_data"]["existing_lists"][new_name] = copied_dict
+        del st.session_state["json_data"]["existing_lists"][existing_name]
+        st.session_state["json_data"]["current_list"] = new_name
 
 def item_crosschecker(new_item: str, new_item_tier: int, check_dict: dict):
     # check against a dict that represents the [current_shown_list] of the master dict (dict of list_builder_dicts)
@@ -115,23 +137,25 @@ def module_edit_list_draw(key):
         def edit_confirm(name=item):
             # trigger session_state, set the item key
             st.session_state.module_item_edit_button_input = True
-            st.session_state["module_item_to_be_edited"] = name
+            st.session_state["json_data"]["module_item_to_be_edited"] = name
 
-        col1, col2, col3 =st.columns([10, 1, 1])
+        col1, col2, col3 =st.columns([6, 1, 1])
 
         with col1:
             st.write(f"{item}")
 
         with col2:
              st.button(
-                label="✏️",
+                label="",
+                icon=":material/edit:",
                 key=f"{item}_edit_button",
                 on_click=edit_confirm
             )
 
         with col3:
             st.button(
-                label="🗑️",
+                label="",
+                icon=":material/delete:",
                 key=f"{item}_delete_button",
                 on_click=delete_confirm
             )

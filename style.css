@@ -1,0 +1,79 @@
+[data-testid="stExpander"] details {
+    padding: 0px !important;
+}
+
+[data-testid="stExpander"] div[data-testid="stVerticalBlock"] {
+    gap: 0.2rem !important;  /* Adjust the gap between elements inside the expander */
+    padding-top: 0px !important;
+    padding-bottom: 0px !important;
+}
+
+[data-testid="stForm"] [data-testid="stVerticalBlock"] [data-testid="stCheckbox"] {
+    margin-top: -6px !important;    /* Pulls elements closer together vertically */
+    margin-bottom: -6px !important;     
+    padding-top: 0px !important;
+    padding-bottom: 0px !important;
+}
+
+
+
+[data-testid="stForm"] {
+    gap: 0.7rem !important;
+    border: 2px solid #FF4B4B;
+}
+
+/* Reset the inner structural gap of the expander block */
+[data-testid="stExpander"] [data-testid="stVerticalBlock"] {
+    gap: 1.0rem !important;
+}
+
+/* Precision margin adjustments specifically for checkboxes inside the expander columns */
+[data-testid="stExpander"] [data-testid="column"] [data-testid="stCheckbox"] {
+    margin-top: -11px !important;    /* Pulls elements closer together vertically */
+    margin-bottom: -11px !important; 
+    padding-top: 0px !important;     /* Protects text descenders from clipping */
+    padding-bottom: 0px !important;
+}
+
+/* Target the button wrapped inside the specific key container */
+div.st-key-list_namechange_button div p {
+    font-size: 18px !important;
+}
+
+/* Remove padding from the main container */
+.block-container {
+    padding-top: 0rem;
+    padding-bottom: 0rem;
+}
+    
+/* Make the header transparent and overlay it */
+header.stAppHeader {
+    background-color: transparent;
+}
+    
+/* Adjust content position to fill the header gap */
+section.stMain .block-container {
+    padding-top: 0rem;
+    z-index: 1;
+}
+
+/*#CSS just for the text input container in the unique list*/
+/* Target the block wrapper containing your unique key class */
+div[data-testid="stVerticalBlockBorderWrapper"]:has(.st-key-unique_list_text_input_container) {
+    padding-bottom: 1.0rem !important;
+}
+
+[data-testid="stHorizontalBlock"] {
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: nowrap !important;
+    overflow-x: auto; /* Adds a scrollbar if content is too wide */
+}
+[data-testid="stHorizontalBlock"] > div {
+    min-width: 0 !important; /* Prevents columns from expanding and cracking layout */
+}
+
+.st-key-top_menu_container {
+    padding-top: 0rem !important;
+    padding-bottom: 0rem !important;
+}

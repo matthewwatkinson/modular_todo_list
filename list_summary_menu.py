@@ -1,29 +1,33 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-# get the edit button logic done - have done name edit but should bring up the new edit page with list items
+# need to change the "exisiting lists" dictionary whenever current key changes - pop out and insert at head
 
 import streamlit as st
 import json
 #from helper import *
 from dictionary_scratchpad import *
 
+hide_menu_style = """
+    <style>
+    #MainMenu {visibility: hidden;}
+    footer {visibility: hidden;}
+    .stDeployButton {display: none;}
+    </style>
+"""
+st.markdown(hide_menu_style, unsafe_allow_html=True)
+
 st.markdown(
     """
-    <style>
-    [data-testid="stHorizontalBlock"] {
-        display: flex !important;
-        flex-direction: row !important;
-        flex-wrap: nowrap !important;
-        overflow-x: auto; /* Adds a scrollbar if content is too wide */
-    }
-    [data-testid="stHorizontalBlock"] > div {
-        min-width: 0 !important; /* Prevents columns from expanding and cracking layout */
-    }
-    </style>
-    """,
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    """, 
     unsafe_allow_html=True
 )
+
+
+with open('style.css') as f:
+    st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True)
+
 
 json_dictionary = data_load()
 
@@ -47,9 +51,6 @@ else:
     # otherwise we need to save the latest state to json
     data_save()
 
-
-# no update/deletion of "current_list" key, want to preserve across sessions
-
 if "new_list_page_jump" not in st.session_state:
     st.session_state.new_list_page_jump = False
 
@@ -57,18 +58,9 @@ if st.session_state.new_list_page_jump:
     st.session_state.new_list_page_jump = False
     st.switch_page("current_list.py")
 
-with st.container(border=True, width="stretch", horizontal=True, key="top_menu_container"):
-    col1, col2 = st.columns(2)
-    with col1:
-        navigate_to_lists_button = st.button("lists", type="primary", width="stretch", key="current_list_to_lists_menu_button")
-    with col2:
-        navigate_to_modules_button = st.button("modules", type="secondary", width="stretch", key="current_list_to_modules_button")
-        if navigate_to_modules_button:
-            st.switch_page("module_summary_menu.py")
-        if navigate_to_lists_button:
-            st.switch_page("list_summary_menu.py")
+page_header()
             
-st.title("My Lists")
+st.write("#### My Lists")
 
 with st.container():
     def add_new_list_func():
@@ -89,10 +81,8 @@ with st.container():
             else:
                 # don't add it
                 st.warning("List with this name already exists")
-#        else:
-#               st.warning("Please enter some text before submitting.")
 
-    add_new_list = st.text_input(label=" ", placeholder="add new list here", on_change=add_new_list_func, key="add_new_list_text")
+    add_new_list = st.text_input(label=" ", label_visibility="collapsed", placeholder="add new list here", on_change=add_new_list_func, key="add_new_list_text")
 
 
 def lists_list_sorter_alph():

@@ -2,37 +2,26 @@
 # -*- coding: utf-8 -*-
 
 # get rid of padding for top elements in turn
-# need to be able to delete modules
 
-# take all edit functions (edit title, add/remove module, save unique list as module to pop out accessed by single pencil button)
-# put new unique list item input inside expander if possible
+# add a background for the st.form
+# tighten up the spacing for the st.form elements using padding, margin, unique keys per container
 
-# need to be able to rename lists
+# consider implementing a button that adds current unique list as new module
+# it would go to a new page that has all list items as checked checkboxes
+# uncheck ones you don't want, choose module name, check it doesn't exist already, create
+
+# tighten up spacing in this form, add a background colour
 
 # clean up old functions, current_list etc etc
 
 # would like a green tick or whatever in expander header if all items checked
 # if we are always calling tier 0 list tier_0_list then master_sub_sort is maybe redundant?
 
-# tier_0_list hardcoding in edit section needs to be fixed (master_sub_list... can help)
-
 
 import streamlit as st
 import json
 #from helper import *
 from dictionary_scratchpad import *
-
-smaller_button_css = """
-<style>
-button[data-testid="stBaseButton-secondary"] {
-    min-height: 0.5rem;
-    padding-top: 0rem;
-    padding-bottom: 0rem;
-}
-</style>
-"""
-
-#st.markdown(smaller_button_css, unsafe_allow_html=True)
 
 hide_menu_style = """
     <style>
@@ -43,99 +32,15 @@ hide_menu_style = """
 """
 st.markdown(hide_menu_style, unsafe_allow_html=True)
 
-padding_css = """
-<style>
-[data-testid="stExpander"] details {
-    padding: 0px !important;
-}
-[data-testid="stExpander"] div[data-testid="stVerticalBlock"] {
-    gap: 0.1rem !important;  /* Adjust the gap between elements inside the expander */
-    padding-top: 0px !important;
-    padding-bottom: 0px !important;
-}
-</style>
-"""
-
-st.markdown(padding_css, unsafe_allow_html=True)
-
-container_padding_css = """
-<style>
-[data-testid="stContainer"] details {
-    padding: 50px !important;
-}
-</style>
-"""
-
-st.markdown(container_padding_css, unsafe_allow_html=True)
-
-
 st.markdown(
     """
-    <style>
-    /* Reset the inner structural gap of the expander block */
-    [data-testid="stExpander"] [data-testid="stVerticalBlock"] {
-        gap: 1.0rem !important;
-    }
-
-    /* Precision margin adjustments specifically for checkboxes inside the expander columns */
-    [data-testid="stExpander"] [data-testid="column"] [data-testid="stCheckbox"] {
-        margin-top: -11px !important;    /* Pulls elements closer together vertically */
-        margin-bottom: -11px !important; 
-        padding-top: 0px !important;     /* Protects text descenders from clipping */
-        padding-bottom: 0px !important;
-    }
-    </style>
-    """,
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    """, 
     unsafe_allow_html=True
 )
 
-st.markdown(
-    """
-    <style>
-    [data-testid="stMain"] .block-container {
-        padding-top: 0rem;
-        padding-bottom: 0rem;
-    }
-    </style>
-    """,
-    unsafe_allow_html=True
-)
-
-#CSS just for the text input container in the unique list
-st.markdown(
-    """
-    <style>
-    /* Target the block wrapper containing your unique key class */
-    div[data-testid="stVerticalBlockBorderWrapper"]:has(.st-key-unique_list_text_input_container) {
-        padding-bottom: 1.0rem !important;
-    }
-    </style>
-    """,
-    unsafe_allow_html=True
-)
-st.markdown(
-    """
-    <style>
-    [data-testid="stHorizontalBlock"] {
-        display: flex !important;
-        flex-direction: row !important;
-        flex-wrap: nowrap !important;
-        overflow-x: auto; /* Adds a scrollbar if content is too wide */
-    }
-    [data-testid="stHorizontalBlock"] > div {
-        min-width: 0 !important; /* Prevents columns from expanding and cracking layout */
-    }
-    </style>
-    """,
-    unsafe_allow_html=True
-)
-
-menu_format = """
-.st-key-top_menu_container {
-    background-color: rgba(100, 100, 200, 0.3);
-}
-"""
-st.html(f"<style>{menu_format}</style>")
+with open('style.css') as f:
+    st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True)
 
 def current_list_sorter():
     current_key = st.session_state["json_data"]["current_list"]
@@ -145,7 +50,6 @@ def current_list_sorter():
         sorted_dict = dict(sorted(list_to_sort.items(), key=lambda item: (-item[1], item[0])))
         # reinsert into session state
         st.session_state["json_data"]["existing_lists"][current_key][sub_dict]["content_list"] = sorted_dict
-
 
 json_dictionary = data_load()
 
@@ -186,6 +90,13 @@ if "clear_all" not in st.session_state:
 if "module_add_key" not in st.session_state:
     st.session_state.module_add_key = False
 
+if "list_settings_toggle" not in st.session_state:
+    st.session_state.list_settings_toggle = False
+
+if "namechange_toggle" not in st.session_state:
+    st.session_state.namechange_toggle = False
+
+
 current_list_sorter()
 
 def current_list_modules_draw(module_key_list: dict):
@@ -210,7 +121,6 @@ def current_list_modules_draw(module_key_list: dict):
                 key=unique_key,
                 on_change=update_state, args=(item, unique_key, target_dict)
                 )
-
 
 def current_list_draw(current_list_master):
     current_key = st.session_state["json_data"]["current_list"]
@@ -296,7 +206,6 @@ def current_list_draw(current_list_master):
                     on_click=delete_confirm
                 )
 
-
 def master_sub_list_sort_launch():
     current_key = st.session_state["json_data"]["current_list"]
     master_list = []
@@ -330,37 +239,90 @@ def module_to_list():
         module_as_dict["expanded"] = True
         # add the new dict into the current list's dictionary structure
         st.session_state["json_data"]["existing_lists"][current_key][module_to_list_key] = module_as_dict
+        st.rerun()
 
-with st.container(border=True, width="stretch", horizontal=True, key="top_menu_container"):
-    col1, col2 = st.columns(2)
-    with col1:
-        navigate_to_lists_button = st.button("lists", type="primary", width="stretch", key="current_list_to_lists_menu_button")
-    with col2:
-        navigate_to_modules_button = st.button("modules", type="secondary", width="stretch", key="current_list_to_modules_button")
-        if navigate_to_modules_button:
-            st.switch_page("module_summary_menu.py")
-        if navigate_to_lists_button:
-            st.switch_page("list_summary_menu.py")
+page_header()
 
-
-
-control_button_container = st.container(horizontal=True, border=True)
+control_button_container = st.container(horizontal=False, border=True)
 with control_button_container:
-    col1, col2, col3 =st.columns([3,1,1], gap="xxsmall")
+    col1, col2, col3, col4 =st.columns([6,1,1,1,], gap="xsmall")
 
-    # add list title
+    #add list title
     with col1:
-        st.write(f"##### {current_key}")
+        if st.button(f"{current_key}", icon=":material/edit:", icon_position="left", type="tertiary", key="list_namechange_button"):
+            #toggle the text input
+            if st.session_state.namechange_toggle:
+                st.session_state.namechange_toggle = False
+            else:
+                st.session_state.namechange_toggle = True
     with col2:
-        mark_all_done_button = st.button("all", key="mark_all_done_button", width="stretch")
+        mark_all_done_button = st.button("", icon=":material/check_circle_unread:", key="mark_all_done_button", help="mark all done")
     with col3:
-        clear_all_button = st.button("none", key="clear_all_button", width="stretch")
-
+        clear_all_button = st.button("", icon=":material/app_badging:", key="clear_all_button", help="clear all")
+    with col4:
+        settings_button = st.button("", icon=":material/settings:", key="edit_settings_button", help="settings")
+        if settings_button:
+            #toggle the settings form
+            if st.session_state.list_settings_toggle:
+                st.session_state.list_settings_toggle = False
+            else:
+                st.session_state.list_settings_toggle = True
+ 
     if mark_all_done_button:
         st.session_state.mark_all_done = True
     if clear_all_button:
         st.session_state.clear_all = True
 
+if st.session_state.namechange_toggle:
+    new_list_name = st.text_input("change list name?", label_visibility="collapsed", placeholder="enter new list name here")
+    if new_list_name:
+        if new_list_name.casefold() not in (list_name.casefold() for list_name in st.session_state["json_data"]["existing_lists"]):
+            #change it
+            list_renamer(current_key, new_list_name)
+            st.session_state.namechange_toggle = False
+            st.rerun()
+        else:
+            st.warning("A list with this name already exists")
+
+if st.session_state.list_settings_toggle:
+    #open up a menu containing the various minor functions
+    with st.form(key="settings_form", border=True):
+        with st.container(border=False, key="settings_add_module"):
+            st.write("Add module list?")
+            module_select_list = []
+            #get the module lists, but only those not already added
+            for module in st.session_state["json_data"]["modules"]:
+                if module not in st.session_state["json_data"]["existing_lists"][current_key]:
+                    module_select_list.append(module)
+            # select box
+            st.session_state.add_module_input = st.selectbox("hidden", options=module_select_list, index=None, placeholder="Select module to add", label_visibility="collapsed", key="module_add_key")
+
+        with st.container(border=False, key="settings_delete_module"):
+            st.write("Remove module lists?")
+            #get the list of module lists
+            sub_lists = []
+            for sub_dict in st.session_state["json_data"]["existing_lists"][current_key]:
+                if st.session_state["json_data"]["existing_lists"][current_key][sub_dict]["list_tier"] == 1:
+                    sub_lists.append(sub_dict)
+            delete_list = [mod_list for mod_list in sub_lists if st.checkbox(mod_list)] 
+
+        with st.container(border=False, horizontal=True, key="settings_submit_container"):
+            submitted = st.form_submit_button("Apply", type="primary")
+            canceled = st.form_submit_button("Cancel")
+
+        if submitted:
+            #update everything
+            for mod_list in delete_list:
+                del st.session_state["json_data"]["existing_lists"][current_key][mod_list]
+            #reset
+            st.session_state.list_settings_toggle = False
+            if st.session_state.module_add_key:
+                module_to_list()
+            st.rerun()
+        if canceled:
+            #reset
+            st.session_state.list_settings_toggle = False
+            st.rerun()       
 
 if st.session_state.mark_all_done:
     current_key = st.session_state["json_data"]["current_list"]
@@ -385,7 +347,6 @@ if st.session_state.clear_all:
 
     st.session_state.clear_all = False
     st.rerun()
-
 
 if st.session_state.edit_button_input:
     # retrieve item to be edited
@@ -430,34 +391,5 @@ if st.session_state.edit_button_input:
         if cancel_button:
             st.session_state.edit_button_input = False
             st.rerun()
-
-with st.container(width="stretch", border=True, height=60, gap=None):
-    # def add_new_item_func():
-    #     new_name = st.session_state.add_new_item_text
-    #     #logic for empty string, dupe item etc
-    #     if new_name:
-    #         # test to see if it already exists in any sub_dicts
-    #         current_key = st.session_state["json_data"]["current_list"]
-    #         if not item_crosschecker(new_name, 0, st.session_state["json_data"]["existing_lists"][current_key]):
-    #             # add it
-    #             st.session_state["json_data"]["existing_lists"][current_key]["tier_0_list"]["content_list"][new_name] = False
-    #             st.session_state.add_new_item_text = ""
-    #         else:
-    #             # don't add it
-    #             st.warning("Item with this name already exists")
-
-    col1, col2 = st.columns([2,1], vertical_alignment="bottom")
-    # with col1:
-    #     add_new_item = st.text_input(label=" ", placeholder="add new list item here", on_change=add_new_item_func, key="add_new_item_text")
-
-    with col2:
-        if st.button("add module", width="stretch"):
-            # get the list for selection box
-            module_select_list = []
-            for module in st.session_state["json_data"]["modules"]:
-                module_select_list.append(module)
-            # select box
-            st.session_state.add_module_input = st.selectbox("hidden", options=module_select_list, index=None, placeholder="Select module to add", label_visibility="collapsed", key="module_add_key", on_change=module_to_list)
-
 
 master_sub_list_sort_launch()
