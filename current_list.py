@@ -297,14 +297,16 @@ if st.session_state.list_settings_toggle:
             # select box
             st.session_state.add_module_input = st.selectbox("hidden", options=module_select_list, index=None, placeholder="Select module to add", label_visibility="collapsed", key="module_add_key")
 
-        with st.container(border=False, key="settings_delete_module"):
-            st.write("Remove module lists?")
-            #get the list of module lists
-            sub_lists = []
-            for sub_dict in st.session_state["json_data"]["existing_lists"][current_key]:
-                if st.session_state["json_data"]["existing_lists"][current_key][sub_dict]["list_tier"] == 1:
-                    sub_lists.append(sub_dict)
-            delete_list = [mod_list for mod_list in sub_lists if st.checkbox(mod_list)] 
+        #get the list of module lists
+        sub_lists = []
+        for sub_dict in st.session_state["json_data"]["existing_lists"][current_key]:
+            if st.session_state["json_data"]["existing_lists"][current_key][sub_dict]["list_tier"] == 1:
+                sub_lists.append(sub_dict)
+        # offer delete option, as long as some modules have been added
+        if sub_lists:
+            with st.container(border=False, key="settings_delete_module"):
+                st.write("Remove module lists?")
+                delete_list = [mod_list for mod_list in sub_lists if st.checkbox(mod_list)] 
 
         with st.container(border=False, horizontal=True, key="settings_submit_container"):
             submitted = st.form_submit_button("Apply", type="primary")
@@ -312,8 +314,9 @@ if st.session_state.list_settings_toggle:
 
         if submitted:
             #update everything
-            for mod_list in delete_list:
-                del st.session_state["json_data"]["existing_lists"][current_key][mod_list]
+            if sub_lists:
+                for mod_list in delete_list:
+                    del st.session_state["json_data"]["existing_lists"][current_key][mod_list]
             #reset
             st.session_state.list_settings_toggle = False
             if st.session_state.module_add_key:

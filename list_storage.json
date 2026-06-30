@@ -1,48 +1,8 @@
 {
-  "current_list": "Another list",
-  "module_to_edit": "Lyra rope climbing",
-  "module_item_to_be_edited": "School uniform",
+  "current_list": "\u5854\u30ce\u5cb3 with Lyra",
+  "module_to_edit": "Gym bouldering",
+  "module_item_to_be_edited": "Shoes",
   "existing_lists": {
-    "New test list": {
-      "tier_0_list": {
-        "list_name": "New test list",
-        "list_tier": 0,
-        "content_list": {
-          "First": false,
-          "Sexond": false,
-          "Third": false
-        },
-        "expanded": true
-      },
-      "Lyra rope climbing": {
-        "list_name": "Lyra rope climbing",
-        "list_tier": 1,
-        "content_list": {
-          "Chalk and brush": false,
-          "Grigri": false,
-          "Gym card": false,
-          "Harness": false,
-          "Lyra climbing shoes": false,
-          "Lyra harness": false
-        },
-        "expanded": false
-      },
-      "Lyra hometime checklist": {
-        "list_name": "Lyra hometime checklist",
-        "list_tier": 1,
-        "content_list": {
-          "Homework": false,
-          "Jacket": false,
-          "Lunch box": false,
-          "School bag": false,
-          "School uniform": false,
-          "Sports equipment": false,
-          "Water bottle": false,
-          "iPad": false
-        },
-        "expanded": true
-      }
-    },
     "Pump2 with Lyra": {
       "tier_0_list": {
         "list_name": "Lyra hometime",
@@ -78,18 +38,77 @@
         "expanded": false
       }
     },
-    "Another list": {
+    "\u5854\u30ce\u5cb3 with Lyra": {
       "tier_0_list": {
-        "list_name": "Another list",
+        "list_name": "\u5854\u30ce\u5cb3 with Lyra",
         "list_tier": 0,
         "content_list": {
-          "Something": false
+          "Same clothing items for Lyra": false
+        },
+        "expanded": false
+      },
+      "Day hiking": {
+        "list_name": "Day hiking",
+        "list_tier": 1,
+        "content_list": {
+          "Backpack": false,
+          "Cash": false,
+          "Down jacket": false,
+          "First aid kit": false,
+          "Food": false,
+          "Hat": false,
+          "Headlight": false,
+          "Other warm layers": false,
+          "Phone battery": false,
+          "Rain jacket": false,
+          "Spare batteries": false,
+          "Sunblock": false,
+          "Sunglasses": false,
+          "Water": false
+        },
+        "expanded": false
+      }
+    },
+    "Gym bouldering": {
+      "tier_0_list": {
+        "list_name": "New test list",
+        "list_tier": 0,
+        "content_list": {},
+        "expanded": false
+      },
+      "Gym bouldering": {
+        "list_name": "Gym bouldering",
+        "list_tier": 1,
+        "content_list": {
+          "Chalk and brush": false,
+          "Finger/warm up equipment": false,
+          "Gym card": false,
+          "Shoes": false,
+          "Skincare kit": false,
+          "Snacks": false,
+          "Water bottle": false
         },
         "expanded": true
       }
     }
   },
   "modules": {
+    "Day hiking": [
+      "Backpack",
+      "Cash",
+      "Down jacket",
+      "First aid kit",
+      "Food",
+      "Hat",
+      "Headlight",
+      "Other warm layers",
+      "Phone battery",
+      "Rain jacket",
+      "Spare batteries",
+      "Sunblock",
+      "Sunglasses",
+      "Water"
+    ],
     "Gym bouldering": [
       "Chalk and brush",
       "Finger/warm up equipment",

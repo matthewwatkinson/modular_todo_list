@@ -69,10 +69,10 @@ if st.session_state.module_item_edit_button_input:
     # retrieve item to be edited
     item_name = st.session_state["json_data"]["module_item_to_be_edited"]
     with st.form(key="module_edit_item_name_input"):
-        user_input = st.text_input(f"Edit '{item_name}':")
+        user_input = st.text_input(f"Edit '{item_name}':", label_visibility="collapsed", value=item_name)
         edit_form_button_container = st.container(horizontal=True) 
         with edit_form_button_container:
-            submit_button = st.form_submit_button(label="Confirm", type="primary")
+            submit_button = st.form_submit_button(label="Confirm edit", type="primary")
             cancel_button = st.form_submit_button(label="Cancel")
 
         if submit_button:

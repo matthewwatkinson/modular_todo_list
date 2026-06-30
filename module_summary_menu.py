@@ -81,26 +81,34 @@ def module_list_draw():
             del st.session_state[f"{name}_delete_button"]
     
 #        with st.container(border=True, horizontal=True):
-        col1, col2, col3, col4 =st.columns([4, 2, 1, 1], vertical_alignment="center")
+        col1, col2, col3 =st.columns([5, 2, 1], vertical_alignment="center")
 
         with col1:
-            st.write(f"{key}")
-
-        with col2:
-            st.write(f"({len(st.session_state["json_data"]["modules"][key])} items)")
-
-        with col3:
             if st.button(
-                label="",
-                icon=":material/edit:",
-                key=f"{key}_edit_button",
+                label=f"{key}",
+                type="tertiary",
+                key=f"{key}_edit_button"
             ):
                 # record the module to be edited
                 st.session_state["json_data"]["module_to_edit"] = key
                 # switch to edit page
                 st.switch_page("module_edit_menu.py")
 
-        with col4:
+        with col2:
+            st.write(f"({len(st.session_state["json_data"]["modules"][key])} items)")
+
+        # with col3:
+        #     if st.button(
+        #         label="",
+        #         icon=":material/edit:",
+        #         key=f"{key}_edit_button",
+        #     ):
+        #         # record the module to be edited
+        #         st.session_state["json_data"]["module_to_edit"] = key
+        #         # switch to edit page
+        #         st.switch_page("module_edit_menu.py")
+
+        with col3:
             st.button(
                 label="",
                 icon=":material/delete:",

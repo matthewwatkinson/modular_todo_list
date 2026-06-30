@@ -110,23 +110,31 @@ def lists_list_draw():
             del st.session_state["json_data"]["existing_lists"][name]
             del st.session_state[f"{name}_list_delete_button"]
     
-        col1, col2, col3 =st.columns([6, 1, 1])
+        col1, col2 =st.columns([7, 1], vertical_alignment="center")
 
         with col1:
-            st.write(f"{key}")
-
-        with col2:
-             if st.button(
-                label="",
-                icon=":material/edit:",
-                key=f"{key}_list_edit_button",
-            ):
+            if st.button(
+                label=f"{key}",
+                type="tertiary",
+                key=f"{key}_list_edit_button"
+                ):
                 # make the selected list the current list
                 st.session_state["json_data"]["current_list"] = key
                 # switch to edit page
                 st.switch_page("current_list.py")
 
-        with col3:
+        # with col2:
+        #      if st.button(
+        #         label="",
+        #         icon=":material/edit:",
+        #         key=f"{key}_list_edit_button",
+        #     ):
+        #         # make the selected list the current list
+        #         st.session_state["json_data"]["current_list"] = key
+        #         # switch to edit page
+        #         st.switch_page("current_list.py")
+
+        with col2:
             st.button(
                 label="",
                 icon=":material/delete:",
