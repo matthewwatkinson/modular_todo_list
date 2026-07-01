@@ -23,6 +23,14 @@ def page_header():
             if navigate_to_lists_button:
                 st.switch_page("list_summary_menu.py")
 
+def current_list_to_top():
+    # reorders existing lists dictionary to bring current to top, thereby ordering by last used
+    lists_folder = st.session_state["json_data"]["existing_lists"]
+    current_list = st.session_state["json_data"]["current_list"]
+    # extract the current list and reinsert at head
+    lists_folder = {current_list: lists_folder.pop(current_list), **lists_folder}
+    # reinsert into session state
+    st.session_state["json_data"]["existing_lists"] = lists_folder
 
 def list_builder(name: str, content_list=[], tier=0):
     list_container = {}

@@ -6,10 +6,6 @@
 # add a background for the st.form
 # tighten up the spacing for the st.form elements using padding, margin, unique keys per container
 
-# consider implementing a button that adds current unique list as new module
-# it would go to a new page that has all list items as checked checkboxes
-# uncheck ones you don't want, choose module name, check it doesn't exist already, create
-
 # clean up old functions, current_list etc etc
 
 # would like a green tick or whatever in expander header if all items checked
@@ -54,10 +50,11 @@ json_dictionary = data_load()
 if "json_data" not in st.session_state:
     st.session_state["json_data"] = json_dictionary
     # special case that this is first time to ever use app and there is no current list
-    if not current_and_populated():
-        # add a basic list
-        st.session_state["json_data"]["existing_lists"]["New list"] = {"tier_0_list": list_builder("New list", ["New item 1"], 0)}
-        st.session_state["json_data"]["current_list"] = "New list"
+    try:
+        current_key = st.session_state["json_data"]["current_list"]
+        current_exists = st.session_state["json_data"]["existing_lists"][current_key]
+    except KeyError:
+        st.switch_page("list_summary_menu.py")
     else:
     # need to initialise the true/false state for each item in just the current list, if we have a current_list with items
         current_key = st.session_state["json_data"]["current_list"]

@@ -1,43 +1,8 @@
 {
-  "current_list": "Pump2 with Lyra",
+  "current_list": "\u5854\u30ce\u5cb3 with Lyra",
   "module_to_edit": "test mod",
   "module_item_to_be_edited": "Shoes",
   "existing_lists": {
-    "Pump2 with Lyra": {
-      "tier_0_list": {
-        "list_name": "Lyra hometime",
-        "list_tier": 0,
-        "content_list": {
-          "Crocs": false,
-          "Gym rope": false
-        },
-        "expanded": true
-      },
-      "Lyra rope climbing": {
-        "list_name": "Lyra rope climbing",
-        "list_tier": 1,
-        "content_list": {
-          "Chalk and brush": false,
-          "Grigri": false,
-          "Gym card": false,
-          "Harness": false,
-          "Lyra climbing shoes": false,
-          "Lyra harness": false
-        },
-        "expanded": false
-      },
-      "Gym bouldering": {
-        "list_name": "Gym bouldering",
-        "list_tier": 1,
-        "content_list": {
-          "Finger/warm up equipment": false,
-          "Shoes": false,
-          "Skincare kit": false,
-          "Snacks": false
-        },
-        "expanded": false
-      }
-    },
     "\u5854\u30ce\u5cb3 with Lyra": {
       "tier_0_list": {
         "list_name": "\u5854\u30ce\u5cb3 with Lyra",
@@ -89,6 +54,41 @@
           "Water bottle": false
         },
         "expanded": true
+      }
+    },
+    "Pump2 with Lyra": {
+      "tier_0_list": {
+        "list_name": "Lyra hometime",
+        "list_tier": 0,
+        "content_list": {
+          "Crocs": false,
+          "Gym rope": false
+        },
+        "expanded": true
+      },
+      "Lyra rope climbing": {
+        "list_name": "Lyra rope climbing",
+        "list_tier": 1,
+        "content_list": {
+          "Chalk and brush": false,
+          "Grigri": false,
+          "Gym card": false,
+          "Harness": false,
+          "Lyra climbing shoes": false,
+          "Lyra harness": false
+        },
+        "expanded": false
+      },
+      "Gym bouldering": {
+        "list_name": "Gym bouldering",
+        "list_tier": 1,
+        "content_list": {
+          "Finger/warm up equipment": false,
+          "Shoes": false,
+          "Skincare kit": false,
+          "Snacks": false
+        },
+        "expanded": false
       }
     }
   },
