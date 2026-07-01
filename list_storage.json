@@ -38,6 +38,28 @@
         "expanded": false
       }
     },
+    "Gym bouldering": {
+      "tier_0_list": {
+        "list_name": "New test list",
+        "list_tier": 0,
+        "content_list": {},
+        "expanded": false
+      },
+      "Gym bouldering": {
+        "list_name": "Gym bouldering",
+        "list_tier": 1,
+        "content_list": {
+          "Chalk and brush": false,
+          "Finger/warm up equipment": false,
+          "Gym card": false,
+          "Shoes": false,
+          "Skincare kit": false,
+          "Snacks": false,
+          "Water bottle": false
+        },
+        "expanded": true
+      }
+    },
     "\u5854\u30ce\u5cb3 with Lyra": {
       "tier_0_list": {
         "list_name": "\u5854\u30ce\u5cb3 with Lyra",
@@ -67,28 +89,6 @@
           "Water": false
         },
         "expanded": false
-      }
-    },
-    "Gym bouldering": {
-      "tier_0_list": {
-        "list_name": "New test list",
-        "list_tier": 0,
-        "content_list": {},
-        "expanded": false
-      },
-      "Gym bouldering": {
-        "list_name": "Gym bouldering",
-        "list_tier": 1,
-        "content_list": {
-          "Chalk and brush": false,
-          "Finger/warm up equipment": false,
-          "Gym card": false,
-          "Shoes": false,
-          "Skincare kit": false,
-          "Snacks": false,
-          "Water bottle": false
-        },
-        "expanded": true
       }
     }
   },

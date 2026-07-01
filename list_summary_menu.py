@@ -72,7 +72,7 @@ with st.container():
                 st.session_state["json_data"]["existing_lists"][new_name]["tier_0_list"] = list_builder(new_name, [], 0)
                 st.session_state["json_data"]["existing_lists"][new_name]["tier_0_list"]["expanded"] = False
                 st.session_state["json_data"]["current_list"] = new_name
-                current_list_to_top()
+                #current_list_to_top()
                 st.session_state.add_new_list_text = ""
                 # set the page jumper
                 st.session_state.new_list_page_jump = True
@@ -119,7 +119,7 @@ def lists_list_draw():
                 ):
                 # make the selected list the current list
                 st.session_state["json_data"]["current_list"] = key
-                current_list_to_top()
+                #current_list_to_top()
                 # switch to edit page
                 st.switch_page("current_list.py")
 

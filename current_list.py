@@ -90,7 +90,7 @@ if "list_settings_toggle" not in st.session_state:
 if "namechange_toggle" not in st.session_state:
     st.session_state.namechange_toggle = False
 
-
+current_list_to_top()
 current_list_sorter()
 
 def current_list_modules_draw(module_key_list: dict):
