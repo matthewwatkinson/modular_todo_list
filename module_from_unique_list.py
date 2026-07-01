@@ -51,7 +51,7 @@ current_key = st.session_state["json_data"]["current_list"]
 
 page_header()
             
-st.write(f"#### Save '{current_key}' unqiue list as new module")
+st.write(f"#### Save '{current_key}' unique list as new module")
 
 #text input for module name
 proposed_module_name = st.text_input(label=" ", label_visibility="collapsed", placeholder="input new module name", key="list_to_mod_text")
