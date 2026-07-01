@@ -24,10 +24,8 @@ st.markdown(
     unsafe_allow_html=True
 )
 
-
 with open('style.css') as f:
     st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True)
-
 
 json_dictionary = data_load()
 
@@ -123,17 +121,6 @@ def lists_list_draw():
                 # switch to edit page
                 st.switch_page("current_list.py")
 
-        # with col2:
-        #      if st.button(
-        #         label="",
-        #         icon=":material/edit:",
-        #         key=f"{key}_list_edit_button",
-        #     ):
-        #         # make the selected list the current list
-        #         st.session_state["json_data"]["current_list"] = key
-        #         # switch to edit page
-        #         st.switch_page("current_list.py")
-
         with col2:
             st.button(
                 label="",
@@ -141,6 +128,5 @@ def lists_list_draw():
                 key=f"{key}_list_delete_button",
                 on_click=delete_confirm
             )
-
 
 lists_list_draw()

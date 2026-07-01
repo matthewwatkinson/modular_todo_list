@@ -1,8 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-# get the edit button logic done - have done name edit but should bring up the new edit page with list items
-
 import streamlit as st
 import json
 from dictionary_scratchpad import *
@@ -22,7 +20,6 @@ st.markdown(
     """, 
     unsafe_allow_html=True
 )
-
 
 with open('style.css') as f:
     st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True)
@@ -96,17 +93,6 @@ def module_list_draw():
 
         with col2:
             st.write(f"({len(st.session_state["json_data"]["modules"][key])} items)")
-
-        # with col3:
-        #     if st.button(
-        #         label="",
-        #         icon=":material/edit:",
-        #         key=f"{key}_edit_button",
-        #     ):
-        #         # record the module to be edited
-        #         st.session_state["json_data"]["module_to_edit"] = key
-        #         # switch to edit page
-        #         st.switch_page("module_edit_menu.py")
 
         with col3:
             st.button(

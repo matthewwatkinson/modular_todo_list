@@ -1,6 +1,6 @@
 {
-  "current_list": "\u5854\u30ce\u5cb3 with Lyra",
-  "module_to_edit": "Gym bouldering",
+  "current_list": "Pump2 with Lyra",
+  "module_to_edit": "test mod",
   "module_item_to_be_edited": "Shoes",
   "existing_lists": {
     "Pump2 with Lyra": {
@@ -11,7 +11,7 @@
           "Crocs": false,
           "Gym rope": false
         },
-        "expanded": false
+        "expanded": true
       },
       "Lyra rope climbing": {
         "list_name": "Lyra rope climbing",
@@ -45,7 +45,7 @@
         "content_list": {
           "Same clothing items for Lyra": false
         },
-        "expanded": false
+        "expanded": true
       },
       "Day hiking": {
         "list_name": "Day hiking",
@@ -135,6 +135,9 @@
       "Harness",
       "Lyra climbing shoes",
       "Lyra harness"
+    ],
+    "test mod": [
+      "Crocs"
     ]
   }
 }

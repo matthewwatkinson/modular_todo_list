@@ -10,12 +10,9 @@
 # it would go to a new page that has all list items as checked checkboxes
 # uncheck ones you don't want, choose module name, check it doesn't exist already, create
 
-# tighten up spacing in this form, add a background colour
-
 # clean up old functions, current_list etc etc
 
 # would like a green tick or whatever in expander header if all items checked
-# if we are always calling tier 0 list tier_0_list then master_sub_sort is maybe redundant?
 
 
 import streamlit as st
@@ -245,7 +242,7 @@ page_header()
 
 control_button_container = st.container(horizontal=False, border=True)
 with control_button_container:
-    col1, col2, col3, col4 =st.columns([6,1,1,1,], gap="xsmall")
+    col1, col2, col3, col4, col5 =st.columns([5,1,1,1,1,], gap="xsmall")
 
     #add list title
     with col1:
@@ -260,7 +257,10 @@ with control_button_container:
     with col3:
         clear_all_button = st.button("", icon=":material/app_badging:", key="clear_all_button", help="clear all")
     with col4:
-        settings_button = st.button("", icon=":material/settings:", key="edit_settings_button", help="settings")
+        if st.button("", icon=":material/library_add:", help="save unique list to new module"):
+            st.switch_page("module_from_unique_list.py")
+    with col5:
+        settings_button = st.button("", icon=":material/settings:", key="edit_settings_button")
         if settings_button:
             #toggle the settings form
             if st.session_state.list_settings_toggle:
