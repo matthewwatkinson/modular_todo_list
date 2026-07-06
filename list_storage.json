@@ -8,21 +8,21 @@
         "list_name": "Lyra hometime",
         "list_tier": 0,
         "content_list": {
-          "Crocs": false,
-          "Gym rope": false
+          "Crocs": true,
+          "Gym rope": true
         },
-        "expanded": true
+        "expanded": false
       },
       "Lyra rope climbing": {
         "list_name": "Lyra rope climbing",
         "list_tier": 1,
         "content_list": {
-          "Chalk and brush": false,
-          "Grigri": false,
-          "Gym card": false,
-          "Harness": false,
-          "Lyra climbing shoes": false,
-          "Lyra harness": false
+          "Chalk and brush": true,
+          "Grigri": true,
+          "Gym card": true,
+          "Harness": true,
+          "Lyra climbing shoes": true,
+          "Lyra harness": true
         },
         "expanded": false
       },
@@ -30,10 +30,10 @@
         "list_name": "Gym bouldering",
         "list_tier": 1,
         "content_list": {
-          "Finger/warm up equipment": false,
-          "Shoes": false,
-          "Skincare kit": false,
-          "Snacks": false
+          "Finger/warm up equipment": true,
+          "Shoes": true,
+          "Skincare kit": true,
+          "Snacks": true
         },
         "expanded": false
       }
@@ -43,7 +43,7 @@
         "list_name": "New test list",
         "list_tier": 0,
         "content_list": {},
-        "expanded": false
+        "expanded": true
       },
       "Gym bouldering": {
         "list_name": "Gym bouldering",
@@ -57,7 +57,7 @@
           "Snacks": false,
           "Water bottle": false
         },
-        "expanded": true
+        "expanded": false
       }
     },
     "\u5854\u30ce\u5cb3 with Lyra": {

@@ -108,6 +108,8 @@ def lists_list_draw():
             
             del st.session_state["json_data"]["existing_lists"][name]
             del st.session_state[f"{name}_list_delete_button"]
+            # don't leave current key empty
+            st.session_state["json_data"]["current_list"] = next(iter(st.session_state["json_data"]["existing_lists"]))
     
         col1, col2 =st.columns([7, 1], vertical_alignment="center")
 

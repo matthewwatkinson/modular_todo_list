@@ -167,3 +167,15 @@ def module_edit_list_draw(key):
                 key=f"{item}_delete_button",
                 on_click=delete_confirm
             )
+
+def expander_title(target_dict, base_string):
+    # is everything true?
+    all_true = True
+    for key in target_dict["content_list"]:
+        if target_dict["content_list"][key] == False:
+            all_true = False
+    if all_true:
+        return f"{base_string} &nbsp; &nbsp; &nbsp; 🟢"
+    else:
+        return base_string
+            

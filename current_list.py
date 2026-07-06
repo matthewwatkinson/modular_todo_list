@@ -99,7 +99,7 @@ def current_list_modules_draw(module_key_list: dict):
         unique_expander_key = widget_key_maker("expander", sublist, "")
         expanded = st.session_state["json_data"]["existing_lists"][current_key][sublist]["expanded"]
         with st.expander(
-            sublist,
+            expander_title(st.session_state["json_data"]["existing_lists"][current_key][sublist], sublist),
             expanded=expanded,
             key=unique_expander_key,
             on_change=update_state,
