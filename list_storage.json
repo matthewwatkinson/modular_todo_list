@@ -8,8 +8,8 @@
         "list_name": "Lyra hometime",
         "list_tier": 0,
         "content_list": {
-          "Crocs": true,
-          "Gym rope": true
+          "Crocs": false,
+          "Gym rope": false
         },
         "expanded": false
       },
@@ -17,12 +17,12 @@
         "list_name": "Lyra rope climbing",
         "list_tier": 1,
         "content_list": {
-          "Chalk and brush": true,
-          "Grigri": true,
-          "Gym card": true,
-          "Harness": true,
-          "Lyra climbing shoes": true,
-          "Lyra harness": true
+          "Chalk and brush": false,
+          "Grigri": false,
+          "Gym card": false,
+          "Harness": false,
+          "Lyra climbing shoes": false,
+          "Lyra harness": false
         },
         "expanded": false
       },
@@ -30,10 +30,10 @@
         "list_name": "Gym bouldering",
         "list_tier": 1,
         "content_list": {
-          "Finger/warm up equipment": true,
-          "Shoes": true,
-          "Skincare kit": true,
-          "Snacks": true
+          "Finger/warm up equipment": false,
+          "Shoes": false,
+          "Skincare kit": false,
+          "Snacks": false
         },
         "expanded": false
       }

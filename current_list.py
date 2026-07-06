@@ -137,7 +137,7 @@ def current_list_draw(current_list_master):
                 st.warning("Item with this name already exists")
 
     with st.expander(
-        "Unique items",
+        expander_title(st.session_state["json_data"]["existing_lists"][current_key]["tier_0_list"], "Unique items"),
         expanded=expanded,
         key=unique_expander_key,
         on_change=update_state,
