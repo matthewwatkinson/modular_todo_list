@@ -3,7 +3,14 @@
 
 import json
 import streamlit as st
+from github import Github, GithubException
 
+try:
+    g = Github(st.secrets["GITHUB_TOKEN"])
+    repo = g.get_repo(st.secrets["REPO_NAME"]) # Format: "username/repo-name"
+    FILE_PATH = "list_storage.json"
+except Exception as e:
+    st.error(f"Failed to connect to GitHub: {e}")
 
 baseline_json_dict = {
   "current_list": "",
@@ -93,22 +100,55 @@ def list_crosschecker(new: dict, existing: dict):
     return accepted_list
 
 def data_load():
-    # import json
     try:
-        with open("list_storage.json", "r") as file:
-            json_dictionary = json.load(file)
-    except json.decoder.JSONDecodeError:
-        # Triggered if the file is completely empty or has invalid syntax
+        # Fetch the file content from the GitHub repository
+        file_content = repo.get_contents(FILE_PATH)
+        # Decode the file bytes into a string, then parse as JSON
+        json_dictionary = json.loads(file_content.decoded_content.decode())
+    except GithubException as e:
+        # If the file doesn't exist on GitHub (404), fallback to baseline
+        if e.status == 404:
+            json_dictionary = baseline_json_dict.copy()
+        else:
+            st.error(f"GitHub Load Error: {e.data.get('message')}")
+            json_dictionary = baseline_json_dict.copy()
+    except (json.decoder.JSONDecodeError, TypeError):
+        # Triggered if the file is empty or corrupted
         json_dictionary = baseline_json_dict.copy()
-    except FileNotFoundError:
-        # Triggered if the file does not exist at all
-        json_dictionary = baseline_json_dict.copy()
+        
     return json_dictionary
 
 def data_save():
-    with open("list_storage.json", "w") as file:
+    try:
         json_dictionary = st.session_state["json_data"]
-        json.dump(json_dictionary, file, indent=2)
+        # Convert dictionary to pretty-printed JSON string
+        new_content = json.dumps(json_dictionary, indent=2)
+        
+        try:
+            # GitHub requires the file's current 'sha' hash to update it
+            contents = repo.get_contents(FILE_PATH)
+            repo.update_file(
+                path=FILE_PATH,
+                message="Streamlit App: Update list_storage.json",
+                content=new_content,
+                sha=contents.sha,
+                branch="main" # Change to "master" if your repo uses it
+            )
+        except GithubException as e:
+            # If the file doesn't exist yet, we create it instead of updating it
+            if e.status == 404:
+                repo.create_file(
+                    path=FILE_PATH,
+                    message="Streamlit App: Initialize list_storage.json",
+                    content=new_content,
+                    branch="main"
+                )
+            else:
+                raise e
+                
+        st.toast("Data successfully saved to GitHub!", icon="✅")
+    except Exception as e:
+        st.error(f"Failed to save data to GitHub: {e}")
 
 def current_and_populated():
     current_and_populated_exists = False

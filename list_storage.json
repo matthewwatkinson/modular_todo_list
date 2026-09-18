@@ -8,8 +8,8 @@
         "list_name": "Lyra hometime",
         "list_tier": 0,
         "content_list": {
-          "Crocs": false,
-          "Gym rope": false
+          "Crocs": true,
+          "Gym rope": true
         },
         "expanded": false
       },
