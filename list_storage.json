@@ -15,7 +15,7 @@
         "list_tier": 1,
         "content_list": {
           "Chalk and brush": false,
-          "Finger/warm up equipment": false,
+          "Finger/warm up equipment": true,
           "Gym card": false,
           "Shoes": false,
           "Skincare kit": false,
