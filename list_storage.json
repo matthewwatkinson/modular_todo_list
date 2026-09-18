@@ -1,5 +1,5 @@
 {
-  "current_list": "Gym bouldering",
+  "current_list": "Persistent list test",
   "module_to_edit": "test mod",
   "module_item_to_be_edited": "Shoes",
   "existing_lists": {
@@ -88,6 +88,14 @@
           "Sunglasses": false,
           "Water": false
         },
+        "expanded": false
+      }
+    },
+    "Persistent list test": {
+      "tier_0_list": {
+        "list_name": "Persistent list test",
+        "list_tier": 0,
+        "content_list": {},
         "expanded": false
       }
     }
