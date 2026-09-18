@@ -7,7 +7,9 @@
       "tier_0_list": {
         "list_name": "Persistent list test",
         "list_tier": 0,
-        "content_list": {},
+        "content_list": {
+          "Persistent item (complete)": false
+        },
         "expanded": true
       }
     },
