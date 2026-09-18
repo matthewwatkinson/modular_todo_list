@@ -95,3 +95,4 @@ websockets==16.0
 wheel==0.47.0
 wsproto==1.3.2
 yarl==1.24.2
+PyGitHub
