@@ -8,7 +8,7 @@
         "list_name": "Persistent list test",
         "list_tier": 0,
         "content_list": {
-          "Persistent item (complete)": false
+          "Persistent item (complete)": true
         },
         "expanded": true
       }
