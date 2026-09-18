@@ -145,8 +145,7 @@ def data_save():
                 )
             else:
                 raise e
-                
-        st.toast("Data successfully saved to GitHub!", icon="✅")
+
     except Exception as e:
         st.error(f"Failed to save data to GitHub: {e}")
 
