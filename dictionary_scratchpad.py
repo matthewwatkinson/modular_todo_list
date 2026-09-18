@@ -5,12 +5,16 @@ import json
 import streamlit as st
 from github import Github, GithubException
 
-try:
-    g = Github(st.secrets["GITHUB_TOKEN"])
-    repo = g.get_repo(st.secrets["REPO_NAME"]) # Format: "username/repo-name"
-    FILE_PATH = "list_storage.json"
-except Exception as e:
-    st.error(f"Failed to connect to GitHub: {e}")
+# Cache the GitHub client creation so it doesn't reconnect constantly, 
+# but handles session management cleanly.
+@st.cache_resource
+def get_github_repo():
+    token = st.secrets["GITHUB_TOKEN"]
+    repo_name = st.secrets["REPO_NAME"]
+    
+    g = Github(token)
+    return g.get_repo(repo_name)
+
 
 baseline_json_dict = {
   "current_list": "",
@@ -100,42 +104,45 @@ def list_crosschecker(new: dict, existing: dict):
     return accepted_list
 
 def data_load():
+    FILE_PATH = "list_storage.json"
+    
     try:
+        # Get a fresh/cached active reference to the repo
+        repo = get_github_repo()
+        
         # Fetch the file content from the GitHub repository
         file_content = repo.get_contents(FILE_PATH)
-        # Decode the file bytes into a string, then parse as JSON
-        json_dictionary = json.loads(file_content.decoded_content.decode())
-    except GithubException as e:
-        # If the file doesn't exist on GitHub (404), fallback to baseline
-        if e.status == 404:
-            json_dictionary = baseline_json_dict.copy()
-        else:
-            st.error(f"GitHub Load Error: {e.data.get('message')}")
-            json_dictionary = baseline_json_dict.copy()
-    except (json.decoder.JSONDecodeError, TypeError):
-        # Triggered if the file is empty or corrupted
-        json_dictionary = baseline_json_dict.copy()
         
-    return json_dictionary
+        # Decode the file bytes into a string, then parse as JSON
+        return json.loads(file_content.decoded_content.decode())
+        
+    except GithubException as e:
+        st.error(f"GitHub API Error [{e.status}]: {e.data.get('message')}")
+        return baseline_json_dict.copy()
+    except Exception as e:
+        # This will catch and print the EXACT hidden error causing the crash
+        st.error(f"Hidden system error: {type(e).__name__} - {e}")
+        return baseline_json_dict.copy()
 
 def data_save():
     try:
+        # Get the active GitHub repository reference
+        repo = get_github_repo()
+        FILE_PATH = "list_storage.json"
+        
         json_dictionary = st.session_state["json_data"]
-        # Convert dictionary to pretty-printed JSON string
         new_content = json.dumps(json_dictionary, indent=2)
         
         try:
-            # GitHub requires the file's current 'sha' hash to update it
             contents = repo.get_contents(FILE_PATH)
             repo.update_file(
                 path=FILE_PATH,
                 message="Streamlit App: Update list_storage.json",
                 content=new_content,
                 sha=contents.sha,
-                branch="main" # Change to "master" if your repo uses it
+                branch="main" 
             )
         except GithubException as e:
-            # If the file doesn't exist yet, we create it instead of updating it
             if e.status == 404:
                 repo.create_file(
                     path=FILE_PATH,
@@ -145,7 +152,7 @@ def data_save():
                 )
             else:
                 raise e
-
+                
     except Exception as e:
         st.error(f"Failed to save data to GitHub: {e}")
 
