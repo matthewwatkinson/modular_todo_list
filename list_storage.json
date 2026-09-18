@@ -1,6 +1,6 @@
 {
   "current_list": "Persistent list test",
-  "module_to_edit": "test mod",
+  "module_to_edit": "Trad climbing",
   "module_item_to_be_edited": "Shoes",
   "existing_lists": {
     "Persistent list test": {
@@ -148,6 +148,7 @@
     ],
     "test mod": [
       "Crocs"
-    ]
+    ],
+    "Trad climbing": []
   }
 }
