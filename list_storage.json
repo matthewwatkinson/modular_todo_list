@@ -3,6 +3,28 @@
   "module_to_edit": "test mod",
   "module_item_to_be_edited": "Shoes",
   "existing_lists": {
+    "Gym bouldering": {
+      "tier_0_list": {
+        "list_name": "New test list",
+        "list_tier": 0,
+        "content_list": {},
+        "expanded": true
+      },
+      "Gym bouldering": {
+        "list_name": "Gym bouldering",
+        "list_tier": 1,
+        "content_list": {
+          "Chalk and brush": false,
+          "Finger/warm up equipment": false,
+          "Gym card": false,
+          "Shoes": false,
+          "Skincare kit": false,
+          "Snacks": false,
+          "Water bottle": false
+        },
+        "expanded": false
+      }
+    },
     "Pump2 with Lyra": {
       "tier_0_list": {
         "list_name": "Lyra hometime",
@@ -34,28 +56,6 @@
           "Shoes": false,
           "Skincare kit": false,
           "Snacks": false
-        },
-        "expanded": false
-      }
-    },
-    "Gym bouldering": {
-      "tier_0_list": {
-        "list_name": "New test list",
-        "list_tier": 0,
-        "content_list": {},
-        "expanded": true
-      },
-      "Gym bouldering": {
-        "list_name": "Gym bouldering",
-        "list_tier": 1,
-        "content_list": {
-          "Chalk and brush": false,
-          "Finger/warm up equipment": false,
-          "Gym card": false,
-          "Shoes": false,
-          "Skincare kit": false,
-          "Snacks": false,
-          "Water bottle": false
         },
         "expanded": false
       }
