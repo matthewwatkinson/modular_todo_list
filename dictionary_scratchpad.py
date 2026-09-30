@@ -3,7 +3,13 @@
 
 import json
 import streamlit as st
+from st_supabase_connection import SupabaseConnection
 
+# Initialize the connection
+conn = st.connection("supabase", type=SupabaseConnection)
+# database table information
+TABLE_NAME = "list_storage" 
+ROW_KEY = 1
 
 baseline_json_dict = {
   "current_list": "",
@@ -39,6 +45,7 @@ def list_builder(name: str, content_list=[], tier=0):
     list_container["content_list"] = {}
     for item in content_list:
         list_container["content_list"][item] = False
+    list_container["expanded"] = False
 
     return list_container
 
@@ -93,22 +100,34 @@ def list_crosschecker(new: dict, existing: dict):
     return accepted_list
 
 def data_load():
-    # import json
     try:
-        with open("list_storage.json", "r") as file:
-            json_dictionary = json.load(file)
-    except json.decoder.JSONDecodeError:
-        # Triggered if the file is completely empty or has invalid syntax
-        json_dictionary = baseline_json_dict.copy()
-    except FileNotFoundError:
-        # Triggered if the file does not exist at all
-        json_dictionary = baseline_json_dict.copy()
-    return json_dictionary
+        # Fetch the row where the 'key' column equals 1
+        response = conn.table(TABLE_NAME).select("data").eq("id", ROW_KEY).execute()
+        
+        # If the row exists, pull out the dictionary from the 'data' column
+        if response.data:
+            return response.data[0]["data"]
+        
+        # Fallback if the database table is empty (equivalent to FileNotFoundError)
+        return baseline_json_dict.copy()
+        
+    except Exception as e:
+        st.error(f"Database read error: {e}")
+        return baseline_json_dict.copy()
 
 def data_save():
-    with open("list_storage.json", "w") as file:
+    try:
+        # Grab the nested dictionary from session state
         json_dictionary = st.session_state["json_data"]
-        json.dump(json_dictionary, file, indent=2)
+        
+        # 'upsert' overwrites the existing row or inserts it if missing
+        conn.table(TABLE_NAME).upsert({
+            "id": ROW_KEY, 
+            "data": json_dictionary
+        }).execute()
+        
+    except Exception as e:
+        st.error(f"Database write error: {e}")
 
 def current_and_populated():
     current_and_populated_exists = False

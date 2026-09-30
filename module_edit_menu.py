@@ -119,5 +119,5 @@ module_edit_list_sorter(module_key)
 
 module_edit_list_draw(module_key)
 
-if st.button("Return"):
-    st.switch_page("module_summary_menu.py")
+#if st.button("Return"):
+#    st.switch_page("module_summary_menu.py")
